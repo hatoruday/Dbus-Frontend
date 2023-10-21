@@ -1,7 +1,25 @@
-import styled, { css } from "styled-components";
 import RailButton from "../components/railBtn";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  Content,
+  DBUSImage,
+  Dot,
+  Down,
+  DownIntroduction,
+  Icon,
+  IntroductionBar,
+  IntroductionImage,
+  IntroductionSubTitle,
+  IntroductionTitle,
+  NewDown,
+  NewTop,
+  OtherIcon,
+  SubTitle,
+  Top,
+  Wrapper,
+} from "../components/introduction-components";
+import { Title } from "../components/auth-components";
 
 interface InitIntroductionProps {
   setIndex: Dispatch<SetStateAction<number>>;
@@ -12,144 +30,6 @@ interface OtherIntroductionProps {
   setIndex: Dispatch<SetStateAction<number>>;
 }
 
-const Wrapper = styled.div`
-  height: 100%;
-  display: grid;
-  grid-template-rows: 5.5fr 4.5fr;
-  width: 393px;
-`;
-
-const Top = styled.div`
-  background-color: white;
-  display: flex;
-  align-items: flex-end;
-  justify-content: end;
-  flex-direction: column;
-  padding-right: 10%;
-`;
-
-const DBUSImage = styled.img`
-  justify-content: end;
-  max-width: 70%;
-  max-height: 50%;
-  align-items: flex-end;
-`;
-
-const Content = styled.div`
-  padding-left: 10%;
-  width: 100%;
-  align-items: flex-start;
-  font-weight: bold;
-  text-align: start;
-
-  color: black;
-`;
-
-const Title = styled.h1`
-  font-size: 50px;
-  font-weight: bold;
-`;
-
-const SubTitle = styled.h3`
-  font-size: 20px;
-`;
-
-const Down = styled.div`
-  background-color: #4764cd;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const DownIntroduction = styled.div`
-  margin-left: 20%;
-  margin-top: 100px;
-  flex-direction: row;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  gap: 20px;
-`;
-
-const Icon = styled.div`
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  justify-content: center;
-  height: 70px;
-  width: 70px;
-  font-size: 15px;
-  border-radius: 50%;
-`;
-
-const OtherIcon = styled.button`
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  justify-content: center;
-  height: 70px;
-  width: 70px;
-  font-size: 15px;
-  border-radius: 50%;
-`;
-
-const NewTop = styled.div`
-  background-color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-const IntroductionImage = styled.img`
-  justify-content: end;
-  padding: 0 5%;
-  max-width: 100%;
-  max-height: 100%;
-  align-items: center;
-`;
-
-const IntroductionTitle = styled.h1`
-  font-size: 25px;
-  color: black;
-`;
-
-const IntroductionSubTitle = styled.h3`
-  font-size: 20px;
-  color: black;
-`;
-const NewDown = styled.div`
-  background-color: white;
-  display: grid;
-  grid-template-rows: 1fr 1fr 2fr;
-`;
-
-const IntroductionBar = styled.div`
-  color: black;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  padding-right: 10%;
-`;
-interface DotProps {
-  active: boolean;
-}
-
-const Dot = styled.div<DotProps>`
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background-color: blue;
-
-  ${({ active }) =>
-    active &&
-    css`
-      width: 20px;
-      height: 20px;
-      background-color: blue;
-    `}
-`;
 interface currentIndexType {
   currentIndex: number;
 }
