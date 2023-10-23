@@ -9,6 +9,9 @@ import reset from "styled-reset"; //브라우저마다 기본적으로 설치되
 import LoadingScreen from "./components/loading-screen";
 import ProtectedRoute from "./components/protected-route";
 import Introduction from "./routes/introduction";
+import PointShop from "./routes/pointShop";
+import WalletLayout from "./components/walletLayout";
+import Deposit from "./routes/deposit";
 
 const router = createBrowserRouter([
   {
@@ -33,7 +36,15 @@ const router = createBrowserRouter([
       },
     ],
   },
-
+  {
+    path: "wallet",
+    element: <WalletLayout />,
+    children: [
+      { path: "", element: <PointShop isDetail={false} /> },
+      { path: "detail", element: <PointShop isDetail={true} /> },
+      { path: "deposit", element: <Deposit /> },
+    ],
+  },
   {
     path: "/login",
     element: <Login />,

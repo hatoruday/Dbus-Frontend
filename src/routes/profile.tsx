@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Top } from "../components/introduction-components";
+import { ProfileBottomContainer } from "../components/profileBottomContainer";
 
 // 배경 컨테이너 스타일
 const BackgroundContainer = styled.div`
@@ -59,7 +59,6 @@ const InsideContainer = styled.div`
   align-items: center;
   width: 100%;
   height: 90%;
-  background-color: orange;
   padding-left: 30px;
   padding-right: 30px;
 `;
@@ -67,30 +66,18 @@ const InsideContainer = styled.div`
 const TopContainer = styled.div`
   display: flex;
   flex-direction: column;
-  background-color: red;
   width: 100%;
   color: black;
   height: 50%;
   justify-content: center;
 `;
 
-const BottomContainer = styled.div`
-  display: flex;
-  background-color: green;
-  opacity: 0.5;
-  width: 100%;
-  color: black;
-  justify-content: center;
-  align-items: center;
-  height: 50%;
-`;
 const NameTokenContainer = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
   height: 100%;
-  background-color: yellow;
   width: 100%;
 `;
 
@@ -115,7 +102,7 @@ const NameContainer = styled.div`
 `;
 
 const Name = styled.div`
-  font-size: 20px;
+  font-size: 30px;
 `;
 const RolContainer = styled.div`
   padding: 10px;
@@ -150,10 +137,17 @@ const TokenContainer = styled.div`
 `;
 
 const RetainingTicketContainer = styled.div`
-  background-color: black;
   display: flex;
+  justify-content: center;
   width: 100%;
   height: 100%;
+  flex-direction: column;
+`;
+
+const TicketTitle = styled.div`
+  display: flex;
+  justify-content: space-between;
+  padding: 30px 0px;
 `;
 
 const IconContainer = styled.div`
@@ -177,12 +171,22 @@ const SubTitle = styled.text`
   color: grey;
   font-size: 9px;
 `;
-
 const VerticalBar = styled.div`
   width: 2px;
   height: 20px;
   background-color: black;
 `;
+
+const TicketContentContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: space-around;
+`;
+
+const TicketContent = styled.div``;
 const UserProfilePage = () => {
   return (
     <BackgroundContainer>
@@ -229,9 +233,39 @@ const UserProfilePage = () => {
               </Token>
             </TokenContainer>
           </NameTokenContainer>
-          <RetainingTicketContainer />
+          <RetainingTicketContainer>
+            <TicketTitle style={{}}>
+              <div>
+                <span style={{ fontSize: "20px" }}>보유 티켓</span>
+                <span style={{ fontSize: "10px", paddingLeft: "10px" }}>
+                  (출발 / 도착)
+                </span>
+              </div>
+              <span style={{ fontSize: "7px" }}>모든 티켓 확인하기</span>
+            </TicketTitle>
+            <TicketContentContainer>
+              <TicketContent
+                style={{ display: "flex", flexDirection: "column" }}
+              >
+                <span style={{ fontSize: "25px" }}>12</span>
+                <span style={{ fontSize: "10px" }}>인하대/주안</span>
+              </TicketContent>
+              <TicketContent
+                style={{ display: "flex", flexDirection: "column" }}
+              >
+                <span style={{ fontSize: "25px" }}>12</span>
+                <span style={{ fontSize: "10px" }}>인하대/주안</span>
+              </TicketContent>
+              <TicketContent
+                style={{ display: "flex", flexDirection: "column" }}
+              >
+                <span style={{ fontSize: "25px" }}>12</span>
+                <span style={{ fontSize: "10px" }}>인하대/주안</span>
+              </TicketContent>
+            </TicketContentContainer>
+          </RetainingTicketContainer>
         </TopContainer>
-        <BottomContainer>def</BottomContainer>
+        <ProfileBottomContainer />
       </InsideContainer>
     </BackgroundContainer>
   );
