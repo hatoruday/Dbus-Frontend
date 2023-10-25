@@ -14,6 +14,7 @@ import WalletLayout from "./components/walletLayout";
 import DepositLog from "./routes/DepositLog";
 import Deposit from "./routes/deposit";
 import Withdrawal from "./routes/Withdrawal";
+import LandingPage from "./routes/LandingPage";
 
 const router = createBrowserRouter([
   {
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
         path: "profile",
         element: <Profile />,
       },
+      // {
+      //   path: "map",
+      //   element: <LandingPage />,
+      // },
     ],
   },
   {

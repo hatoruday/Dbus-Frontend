@@ -6,7 +6,7 @@ const Button = styled.span`
   font-weight: 500;
   width: 70%;
   height: 12%;
-  background-color: #04d9b2;
+  background-color: white;
   padding: 10px 20px;
   border-radius: 10px;
   display: flex;
@@ -20,17 +20,18 @@ const MenuItem = styled.div`
   cursor: pointer;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: start;
   height: 50px;
   width: 50px;
   border-radius: 50%;
+  padding-right: 8px;
   svg {
     width: 30px;
   }
 `;
 
 const Input = styled.input`
-  background-color: rgba(153, 234, 220, 0.5);
+  background-color: rgba(221, 221, 221, 0.5);
   padding: 10px 20px;
   border-radius: 7px;
   border: none;
@@ -38,10 +39,10 @@ const Input = styled.input`
   width: 300px;
   height: 30px;
   font-size: 12pt;
-  color: #ffffff;
+  color: rgba(0, 0, 0, 0.1);
 
   &::placeholder {
-    color: grey; /* Placeholder 텍스트의 색상을 회색으로 설정 */
+    color: rgba(0, 0, 0, 0.3); /* Placeholder 텍스트의 색상을 회색으로 설정 */
     opacity: 0.8;
   }
 `;
