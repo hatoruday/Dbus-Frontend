@@ -51,10 +51,12 @@ export const Text = styled.text<TextProps>`
 interface LogoProps {
   width?: string;
   height?: string;
+  color?: string;
 }
 export const Logo = styled.img<LogoProps>`
   width: ${(props) => props.width};
   height: ${(props) => props.height};
+  color: ${(props) => props.color};
 `;
 
 const Menu = styled.div`

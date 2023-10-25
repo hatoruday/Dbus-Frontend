@@ -11,7 +11,9 @@ import ProtectedRoute from "./components/protected-route";
 import Introduction from "./routes/introduction";
 import PointShop from "./routes/pointShop";
 import WalletLayout from "./components/walletLayout";
+import DepositLog from "./routes/DepositLog";
 import Deposit from "./routes/deposit";
+import Withdrawal from "./routes/Withdrawal";
 
 const router = createBrowserRouter([
   {
@@ -42,7 +44,17 @@ const router = createBrowserRouter([
     children: [
       { path: "", element: <PointShop isDetail={false} /> },
       { path: "detail", element: <PointShop isDetail={true} /> },
-      { path: "deposit", element: <Deposit /> },
+      { path: "depositLog", element: <DepositLog /> },
+      {
+        path: "deposit",
+        element: (
+          <Deposit address="0xddF2b929370CF0962F0A87A49f388CA191432008" />
+        ),
+      },
+      {
+        path: "withdrawal",
+        element: <Withdrawal />,
+      },
     ],
   },
   {
