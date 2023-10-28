@@ -1,4 +1,4 @@
-import styled from "styled-components"
+import styled from "styled-components";
 
 const Wrapper = styled.div`
   height: 100vh; //vh-> parent값에 의존하지 않고 view로 의존함.
@@ -9,8 +9,13 @@ const Wrapper = styled.div`
 
 const Text = styled.span`
   font-size: 24px;
+  color: black;
 `;
 
 export default function LoadingScreen() {
-  return <Wrapper><Text>Loading</Text></Wrapper>
+  return (
+    <Wrapper>
+      <Text>Loading...</Text>
+    </Wrapper>
+  );
 }

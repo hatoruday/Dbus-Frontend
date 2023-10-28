@@ -1,4 +1,6 @@
+import { gql, useMutation } from "@apollo/client";
 import styled from "styled-components";
+import LoadingScreen from "./loading-screen";
 
 interface ButtonProps {
   color?: string;
@@ -78,11 +80,32 @@ const MenuItem = styled.div`
   align-items: center;
 `;
 
+const BUY_TOKEN = gql`
+  mutation buyToken($amount: Int!) {
+    buyToken(amount: $amount) {
+      ok
+      error
+    }
+  }
+`;
+
 export const PointMenu = () => {
-  return (
+  const [buyToken, { loading }] = useMutation(BUY_TOKEN);
+
+  return loading ? (
+    <LoadingScreen />
+  ) : (
     <>
       <Menu>
-        <MenuItem>
+        <MenuItem
+          onClick={() => {
+            buyToken({
+              variables: {
+                amount: 1000,
+              },
+            });
+          }}
+        >
           <Text color="rgba(71, 100, 205, 0.85)" fontSize="20px">
             1000 포인트
           </Text>

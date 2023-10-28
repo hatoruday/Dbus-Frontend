@@ -10,6 +10,18 @@ import {
 } from "../components/auth-components";
 import NewAccountButton from "../components/newAccountBtn";
 import styled from "styled-components";
+import { gql, useMutation } from "@apollo/client";
+import { logUserIn } from "../apollo";
+
+const LOGIN_MUTATION = gql`
+  mutation login($username: String!, $password: String!) {
+    login(username: $username, password: $password) {
+      ok
+      token
+      error
+    }
+  }
+`;
 
 const StyledLink = styled(Link)`
   text-decoration: none;
@@ -18,17 +30,25 @@ const StyledLink = styled(Link)`
 `;
 
 export default function Login() {
+  const onCompleted = (data: any) => {
+    const {
+      login: { ok, error, token },
+    } = data;
+    if (token) {
+      logUserIn(token);
+    }
+  };
+  const [login, { loading }] = useMutation(LOGIN_MUTATION, { onCompleted });
   const navigate = useNavigate();
-  const [isLoading, setLoading] = useState(false);
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {
       target: { name, value },
     } = e;
-    if (name === "email") {
-      setEmail(value);
+    if (name === "name") {
+      setUsername(value);
     } else if (name === "password") {
       setPassword(value);
     }
@@ -36,17 +56,20 @@ export default function Login() {
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
-    if (isLoading || email === "" || password === "") return;
+    if (loading || username === "" || password === "") return;
     try {
-      setLoading(true);
-      //await signInWithEmailAndPassword(auth, email, password);
+      login({
+        variables: {
+          username,
+          password,
+        },
+      });
       navigate("/");
     } catch (e) {
       // if (e instanceof FirebaseError) {
       //   setError(e.message);
       // }
     } finally {
-      setLoading(false);
     }
   };
   return (
@@ -55,10 +78,10 @@ export default function Login() {
       <Form onSubmit={onSubmit}>
         <Input
           onChange={onChange}
-          name="email"
-          value={email}
+          name="name"
+          value={username}
           placeholder="사용자 이름, 이메일 주소 또는 휴대폰 번호"
-          type="email"
+          type="text"
           required
         />
         <Input
@@ -69,7 +92,7 @@ export default function Login() {
           type="password"
           required
         />
-        <Input type="submit" value={isLoading ? "Loading..." : "로그인"} />
+        <Input type="submit" value={loading ? "Loading..." : "로그인"} />
         {error !== "" ? <Error>{error}</Error> : null}
         <Switcher>
           <StyledLink to="/create-account">비밀번호를 잊으셨나요?</StyledLink>

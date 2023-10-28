@@ -7,8 +7,23 @@ import {
   Title,
   Wrapper,
 } from "../components/auth-components";
+import { gql, useMutation } from "@apollo/client";
+
+const CREATE_ACCOUNT_MUTATION = gql`
+  mutation createAccount(
+    $username: String!
+    $email: String!
+    $password: String!
+  ) {
+    createAccount(username: $username, email: $email, password: $password) {
+      ok
+      error
+    }
+  }
+`;
 
 export default function CreateAccount() {
+  const [createAccount] = useMutation(CREATE_ACCOUNT_MUTATION);
   const navigate = useNavigate();
   const [isLoading, setLoading] = useState(false);
   const [name, setName] = useState("");
@@ -26,16 +41,22 @@ export default function CreateAccount() {
       setPassword(value);
     }
   };
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); //화면이 새로고침되지 않도록 넣어주는 것.
 
     if (isLoading || name === "" || email === "" || password === "") return;
     try {
       setLoading(true);
-
-      navigate("/");
+      createAccount({
+        variables: {
+          username: name,
+          email,
+          password,
+        },
+      });
+      navigate("/login");
     } catch (e) {
-      //뭔가를 함!
+      console.log(e);
     } finally {
       setLoading(false);
     }
@@ -46,7 +67,7 @@ export default function CreateAccount() {
       <Form onSubmit={onSubmit}>
         <Input
           onChange={onChange}
-          name="이름"
+          name="name"
           value={name}
           placeholder="name"
           type="text"

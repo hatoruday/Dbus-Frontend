@@ -1,4 +1,6 @@
 import styled from "styled-components";
+import { logUserOut } from "../apollo";
+import { useNavigate } from "react-router-dom";
 
 const Title = styled.div`
   font-size: 20pt;
@@ -46,6 +48,7 @@ const MenuIcon = styled.div`
 `;
 
 export const ProfileBottomContainer = () => {
+  const navigate = useNavigate();
   return (
     <BottomContainer>
       <Title>계정관리</Title>
@@ -162,7 +165,11 @@ export const ProfileBottomContainer = () => {
             </MenuIcon>
             탑승자 토큰 구매 / 판매
           </div>
-          <MenuIcon>
+          <MenuIcon
+            onClick={() => {
+              navigate("/user/shop");
+            }}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -295,6 +302,53 @@ export const ProfileBottomContainer = () => {
             Dbus 사용 설명
           </div>
           <MenuIcon>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M8.25 4.5l7.5 7.5-7.5 7.5"
+              />
+            </svg>
+          </MenuIcon>
+        </MenuItem>
+        <MenuItem>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <MenuIcon>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"
+                />
+              </svg>
+            </MenuIcon>
+            로그아웃
+          </div>
+          <MenuIcon
+            onClick={() => {
+              logUserOut();
+            }}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
