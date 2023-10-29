@@ -133,7 +133,7 @@ export default function Introduction() {
   const navigate = useNavigate();
   useEffect(() => {
     if (index === 4) {
-      navigate("/login");
+      navigate("/user");
     }
   }, [index, navigate]);
   return (

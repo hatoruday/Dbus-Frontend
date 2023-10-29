@@ -1,8 +1,9 @@
 import styled, { css } from "styled-components";
 import { Text } from "../components/pointMenu";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Error } from "../components/auth-components";
+import { gql, useMutation, useQuery } from "@apollo/client";
 
 const DepositPage = styled.div`
   background-color: white;
@@ -54,8 +55,10 @@ export const Input = styled.input`
   opacity: 1;
   padding: 10px 20px;
   font-size: 11pt;
-  color: #ffffff;
-
+  color: black;
+  &:focus {
+    outline: none; // Change this to the desired border color: ;
+  }
   &::placeholder {
     color: white; /* Placeholder 텍스트의 색상을 회색으로 설정 */
     opacity: 1;
@@ -115,37 +118,89 @@ const FormInformation = styled.div`
 interface WithdrawalInterface {
   possibleAmount?: number;
 }
-export default function Withdrawal({ possibleAmount }: WithdrawalInterface) {
+
+const SEE_PROFILE = gql`
+  query seeProfile {
+    seeProfile {
+      username
+      tokenAmount
+      id
+      address
+      tickets {
+        amount
+        fund {
+          id
+          stations {
+            name
+          }
+        }
+      }
+    }
+  }
+`;
+
+const TRANSFER = gql`
+  mutation transfer($fundId: Int!, $amount: Int!, $withdrawAddress: String!) {
+    transfer(
+      fundId: $fundId
+      amount: $amount
+      withdrawAddress: $withdrawAddress
+    ) {
+      ok
+      error
+    }
+  }
+`;
+
+export default function Withdrawal() {
+  const location = useLocation();
   const navigate = useNavigate();
+  const onCompleted = (data) => {
+    navigate("/user");
+  };
+  const [transfer, { loading }] = useMutation(TRANSFER, { onCompleted });
+  const { fundId, amount, railName } = location.state;
+
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [isLoading, setLoading] = useState(false);
-  const [amount, setAmount] = useState("");
+  const [wAddress, setWAddress] = useState("");
+  const [settingAmount, setSettingAmount] = useState(0);
   const [error, setError] = useState("");
+  const onWChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const {
+      target: { value },
+    } = e;
+
+    setWAddress(value);
+  };
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {
-      target: { name, value },
+      target: { value },
     } = e;
-    if (name === "amount") {
-      setAmount(value);
-    }
+    const parsingValue = parseInt(value, 10);
+    setSettingAmount(parsingValue);
   };
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
-    if (isLoading || amount === "") return;
+    console.log(typeof fundId, typeof settingAmount, typeof wAddress);
+    if (loading || settingAmount === 0) return;
     try {
-      setLoading(true);
-      navigate("/wallet/detail");
+      transfer({
+        variables: {
+          fundId,
+          amount: settingAmount,
+          withdrawAddress: wAddress,
+        },
+      });
     } catch (e) {
-      // error implementation
+      console.log(e);
     } finally {
-      setLoading(false);
     }
   };
   return (
     <DepositPage>
       <Text fontSize="25px" color="rgba(71, 100, 205, 0.9)">
-        DBT 출금하기
+        {railName[0].split(" ")[0]} / {railName[1].split(" ")[0]}
       </Text>
       <AddressTitle>
         <div
@@ -160,10 +215,10 @@ export default function Withdrawal({ possibleAmount }: WithdrawalInterface) {
           </Text>
           <div style={{ display: "flex", gap: "5px" }}>
             <Text color="black" fontSize="13pt">
-              {possibleAmount || 0}
+              {amount || 0}
             </Text>
             <Text color="black" fontSize="13pt">
-              DBT
+              {fundId == 0 ? "POINT" : "TICKET"}
             </Text>
           </div>
         </div>
@@ -179,10 +234,10 @@ export default function Withdrawal({ possibleAmount }: WithdrawalInterface) {
           </Text>
           <div style={{ display: "flex", gap: "5px" }}>
             <Text color="black" fontSize="13pt">
-              {possibleAmount || 0}
+              {amount || 0}
             </Text>
             <Text color="black" fontSize="13pt">
-              DBT
+              {fundId == 0 ? "POINT" : "TICKET"}
             </Text>
           </div>
         </div>
@@ -215,17 +270,22 @@ export default function Withdrawal({ possibleAmount }: WithdrawalInterface) {
         >
           <div
             style={{
-              backgroundColor: "#d9d9d9",
+              backgroundColor: "white",
               padding: "0px 15px",
               width: "100%",
               height: "40px",
               display: "flex",
               alignItems: "center",
+              border: "1px solid #d9d9d9",
             }}
           >
-            <Text fontSize="11pt" color="rgba(0, 0, 0, 0.2)">
-              DBUS TOKEN
-            </Text>
+            <Input
+              onChange={onWChange}
+              name="amount"
+              value={wAddress}
+              placeholder="보낼 주소를 입력해주세요"
+              required
+            />
           </div>
         </div>
         <div
@@ -252,8 +312,8 @@ export default function Withdrawal({ possibleAmount }: WithdrawalInterface) {
               <Input
                 onChange={onChange}
                 name="amount"
-                value={amount}
-                placeholder="사용자 이름, 이메일 주소 또는 휴대폰 번호"
+                value={settingAmount}
+                placeholder="보낼 수량을 입력해주세요"
                 type="number"
                 required
               />
@@ -275,7 +335,10 @@ export default function Withdrawal({ possibleAmount }: WithdrawalInterface) {
               <AmountBox
                 type="button"
                 selected={selectedIndex == 1}
-                onClick={() => setSelectedIndex(1)}
+                onClick={() => {
+                  setSelectedIndex(1);
+                  setSettingAmount(amount * 0.1);
+                }}
               >
                 <Text color="#6a6868" fontSize="10pt">
                   10%
@@ -284,7 +347,10 @@ export default function Withdrawal({ possibleAmount }: WithdrawalInterface) {
               <AmountBox
                 type="button"
                 selected={selectedIndex == 2}
-                onClick={() => setSelectedIndex(2)}
+                onClick={() => {
+                  setSelectedIndex(2);
+                  setSettingAmount(amount * 0.25);
+                }}
               >
                 <Text color="#6a6868" fontSize="10pt">
                   25%
@@ -293,7 +359,10 @@ export default function Withdrawal({ possibleAmount }: WithdrawalInterface) {
               <AmountBox
                 type="button"
                 selected={selectedIndex == 3}
-                onClick={() => setSelectedIndex(3)}
+                onClick={() => {
+                  setSelectedIndex(3);
+                  setSettingAmount(amount * 0.5);
+                }}
               >
                 <Text color="#6a6868" fontSize="10pt">
                   50%
@@ -302,7 +371,10 @@ export default function Withdrawal({ possibleAmount }: WithdrawalInterface) {
               <AmountBox
                 type="button"
                 selected={selectedIndex == 4}
-                onClick={() => setSelectedIndex(4)}
+                onClick={() => {
+                  setSelectedIndex(4);
+                  setSettingAmount(amount);
+                }}
               >
                 <Text color="#6a6868" fontSize="10pt">
                   100%
@@ -344,11 +416,11 @@ export default function Withdrawal({ possibleAmount }: WithdrawalInterface) {
               </Text>
 
               <Text color="black" fontSize="12pt">
-                160DBT
+                {settingAmount} {fundId == 0 ? "POINT" : "TICKET"}
               </Text>
             </div>
           </FormInformation>
-          <Input type="submit" value={isLoading ? "Loading..." : "출금하기"} />
+          <Input type="submit" value={loading ? "Loading..." : "출금하기"} />
           {error !== "" ? <Error>{error}</Error> : null}
         </Form>
       </DepositMainPage>

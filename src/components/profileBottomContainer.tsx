@@ -1,12 +1,13 @@
 import styled from "styled-components";
 import { logUserOut } from "../apollo";
 import { useNavigate } from "react-router-dom";
+import { Logo } from "./pointMenu";
 
 const Title = styled.div`
-  font-size: 20pt;
+  font-size: 16pt;
   color: black;
   width: 100%;
-  padding: 20px 20px;
+  padding: 20px 0px;
 `;
 const BottomContainer = styled.div`
   display: flex;
@@ -53,7 +54,11 @@ export const ProfileBottomContainer = () => {
     <BottomContainer>
       <Title>계정관리</Title>
       <Menu>
-        <MenuItem>
+        <MenuItem
+          onClick={() => {
+            navigate("/map");
+          }}
+        >
           <div
             style={{
               display: "flex",
@@ -62,22 +67,9 @@ export const ProfileBottomContainer = () => {
             }}
           >
             <MenuIcon>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="w-6 h-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-                />
-              </svg>
+              <Logo src="/search.svg" />
             </MenuIcon>
-            개인정보
+            노선검색
           </div>
           <MenuIcon>
             <svg
@@ -96,7 +88,7 @@ export const ProfileBottomContainer = () => {
             </svg>
           </MenuIcon>
         </MenuItem>
-        <MenuItem>
+        <MenuItem onClick={() => navigate("/user/detail")}>
           <div
             style={{
               display: "flex",
@@ -146,6 +138,9 @@ export const ProfileBottomContainer = () => {
               flexDirection: "row",
               alignItems: "center",
             }}
+            onClick={() => {
+              navigate("/user/shop");
+            }}
           >
             <MenuIcon>
               <svg
@@ -163,13 +158,9 @@ export const ProfileBottomContainer = () => {
                 />
               </svg>
             </MenuIcon>
-            탑승자 토큰 구매 / 판매
+            포인트 구매
           </div>
-          <MenuIcon
-            onClick={() => {
-              navigate("/user/shop");
-            }}
-          >
+          <MenuIcon>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"

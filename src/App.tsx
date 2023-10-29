@@ -23,6 +23,7 @@ import LineResult from "./routes/ShowRails";
 import ShowRails from "./routes/ShowRails";
 import ShowFund from "./routes/showFund";
 import Donate from "./routes/donate";
+import Consume from "./routes/consume";
 
 const router = createBrowserRouter([
   {
@@ -47,12 +48,10 @@ const router = createBrowserRouter([
         children: [
           { path: "shop", element: <PointShop isDetail={false} /> },
           { path: "detail", element: <PointShop isDetail={true} /> },
-          { path: "depositLog", element: <DepositLog /> },
+          { path: "depositlog", element: <DepositLog /> },
           {
             path: "deposit",
-            element: (
-              <Deposit address="0xddF2b929370CF0962F0A87A49f388CA191432008" />
-            ),
+            element: <Deposit />,
           },
           {
             path: "withdrawal",
@@ -77,6 +76,10 @@ const router = createBrowserRouter([
           {
             path: "donate",
             element: <Donate />,
+          },
+          {
+            path: "consume",
+            element: <Consume />,
           },
         ],
       },

@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { Logo, Text } from "../components/pointMenu";
-import { useLocation } from "react-router-dom";
-
+import { useLocation, useNavigate } from "react-router-dom";
+import QRCode from "react-qr-code";
 const DepositPage = styled.div`
   background-color: white;
   height: 100%;
@@ -43,20 +43,20 @@ const DepositMainPage = styled.div`
   height: 80%;
 `;
 
-export default function Deposit() {
+export default function Consume() {
   const location = useLocation();
-  const { address } = location.state;
+  const { fundId, userId, ticketAmount, railName } = location.state;
   return (
     <DepositPage>
       <Text fontSize="25px" color="rgba(71, 100, 205, 0.9)">
-        DBT 입금하기
+        티켓 사용
       </Text>
       <AddressTitle>
         <Text color="black" fontSize="16pt">
-          내 DBT 입금 주소
+          {railName[0].split(" ")[0]} / {railName[1].split(" ")[0]}
         </Text>
         <DepositButton>
-          <Text color="white">공유</Text>
+          <Text color="white">사용</Text>
         </DepositButton>
       </AddressTitle>
       <DepositMainPage>
@@ -69,7 +69,7 @@ export default function Deposit() {
           }}
         >
           <Text color="#d9d9d9" fontSize="12pt">
-            입금 네트워크
+            QR코드리더기에 태그하세요
           </Text>
         </div>
         <div
@@ -84,7 +84,7 @@ export default function Deposit() {
           }}
         >
           <Text fontSize="11pt" color="rgba(0, 0, 0, 0.2)">
-            DBUS
+            {ticketAmount}개 보유중
           </Text>
         </div>
         <div
@@ -93,9 +93,16 @@ export default function Deposit() {
             height: "70%",
             display: "flex",
             justifyContent: "center",
+            padding: "30px",
           }}
         >
-          <Logo src="/qrcode.svg" />
+          <QRCode
+            value={JSON.stringify({
+              fundId,
+              userId,
+              left: ticketAmount - 1,
+            })}
+          />
         </div>
 
         <div
@@ -116,7 +123,7 @@ export default function Deposit() {
         >
           <div style={{ width: "80%", wordWrap: "break-word" }}>
             <Text color="#d9d9d9" fontSize="12pt">
-              {address}
+              티켓 사용
             </Text>
           </div>
 

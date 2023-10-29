@@ -7,6 +7,8 @@ import {
   TransactionLog,
 } from "../components/depositComponent";
 import DropdownButton from "../components/dropdownButton";
+import { gql, useQuery } from "@apollo/client";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const DepositPage = styled.div`
   background-color: white;
@@ -58,6 +60,11 @@ const LogTopContainer = styled.div`
 const LogBottomContainer = styled.div``;
 
 export default function DepositLog() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { userId, fundId, railName, ticketAmount, tokenAmount, address } =
+    location.state;
+
   return (
     <DepositPage>
       <div
@@ -68,31 +75,45 @@ export default function DepositLog() {
         }}
       >
         <Text fontSize="25px" color="rgba(71, 100, 205, 0.9)">
-          DBT
+          {railName[1] == "" ? railName[0] : railName[0].split(" ")[0]} /{" "}
+          {railName[1].split(" ")[0]}
         </Text>
         <Button color="rgba(71, 100, 205, 0.35)" fontSize="10px">
-          DBUS TOKEN
+          {railName[1] == "" ? "POINT" : "TICKET"}
         </Button>
       </div>
       <TopDepositPage>
         <TopMenuItem
           description="총 보유갯수"
-          amount="777.0000000"
-          symbol="DBT"
-          correspondingAmount="123,456"
+          amount={railName[1] == "" ? tokenAmount : ticketAmount}
+          symbol={railName[1] == "" ? "P" : "T"}
+          correspondingAmount={
+            railName[1] == "" ? tokenAmount : ticketAmount * 4000
+          }
           correspondingSymbol="KRW"
         />
         <TopMenuItem
           description="입/출금 가능"
-          amount="365.0000000"
-          symbol="DBT"
-          correspondingAmount="123,456"
+          amount={railName[1] == "" ? tokenAmount : ticketAmount}
+          symbol={railName[1] == "" ? "P" : "T"}
+          correspondingAmount={
+            railName[1] == "" ? tokenAmount : ticketAmount * 4000
+          }
           correspondingSymbol="KRW"
         />
         <div></div>
       </TopDepositPage>
       <DepositWithdrawelButton>
-        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+        <div
+          style={{ display: "flex", alignItems: "center", gap: "10px" }}
+          onClick={() =>
+            navigate("/user/deposit", {
+              state: {
+                address: address,
+              },
+            })
+          }
+        >
           <Logo
             src="/arrow-right-on-rectangle.svg"
             width="35px"
@@ -105,7 +126,18 @@ export default function DepositLog() {
         <div
           style={{ height: "100%", width: "2px", backgroundColor: "#d9d9d9" }}
         ></div>
-        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+        <div
+          style={{ display: "flex", alignItems: "center", gap: "10px" }}
+          onClick={() =>
+            navigate("/user/withdrawal", {
+              state: {
+                railName,
+                fundId,
+                amount: tokenAmount == 0 ? ticketAmount : tokenAmount,
+              },
+            })
+          }
+        >
           <Logo src="/arrow-left-on-rectangle.svg" width="35px" height="35px" />
           <Text fontSize="20px" color="rgba(71, 100, 205, 0.5)">
             출금하기

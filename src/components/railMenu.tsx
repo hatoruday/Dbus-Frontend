@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import { Button, Logo, Text } from "./pointMenu";
+import { gql, useQuery } from "@apollo/client";
+import { useNavigate } from "react-router-dom";
 
 const Menu = styled.div`
   display: flex;
@@ -38,126 +40,95 @@ const TokenImage = styled.img<TokenImageInterface>`
   background-size: cover;
   border-radius: 50%;
 `;
+const SEE_PROFILE = gql`
+  query seeProfile {
+    seeProfile {
+      username
+      tokenAmount
+      id
+      address
+      tickets {
+        amount
+        fund {
+          id
+          stations {
+            name
+          }
+        }
+      }
+    }
+  }
+`;
+
+const MenuItemComponent = ({
+  starting,
+  destination,
+  ticketAmount,
+  tokenAmount,
+}) => {
+  const { data } = useQuery(SEE_PROFILE);
+  const navigate = useNavigate();
+  return (
+    <MenuItem
+      onClick={() =>
+        navigate("/user/depositlog", {
+          state: {
+            userId: data?.seeProfile?.id,
+            fundId: data?.seeProfile?.tickets[0]?.fund?.id,
+            railName: [starting, destination],
+            ticketAmount: ticketAmount,
+            tokenAmount: tokenAmount,
+            address: data?.seeProfile?.address,
+          },
+        })
+      }
+    >
+      <TokenImage url="/ticket.png" />
+      <TokenContent>
+        <Text color="black" fontSize="20px">
+          {starting.split(" ")[0]} - {destination.split(" ")[0]}
+        </Text>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-end",
+          }}
+        >
+          <Text color="black" fontSize="20px">
+            {tokenAmount == 0 ? ticketAmount : tokenAmount}
+          </Text>
+          <Text color="grey" fontSize="10px">
+            {tokenAmount == 0 ? ticketAmount * 4500 : tokenAmount}원(KRW)
+          </Text>
+        </div>
+      </TokenContent>
+      <Logo src="/chevron-right.svg" width="30px" height="30px" />
+    </MenuItem>
+  );
+};
 
 export const RailMenu = () => {
+  const { data } = useQuery(SEE_PROFILE);
   return (
     <>
       <Menu>
-        <MenuItem>
-          <TokenImage url="/xrp-logo.png" />
-          <TokenContent>
-            <Text color="black" fontSize="20px">
-              DBT
-            </Text>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-end",
-              }}
-            >
-              <Text color="black" fontSize="13px">
-                365.000000
-              </Text>
-              <Text color="grey" fontSize="5px">
-                5만 4천원(KRW)
-              </Text>
-            </div>
-          </TokenContent>
-          <Logo src="/chevron-right.svg" width="30px" height="30px" />
-        </MenuItem>
-        <MenuItem>
-          <TokenImage url="/ethe-logo.png" />
-          <TokenContent>
-            <Text color="black" fontSize="20px">
-              인하/주안
-            </Text>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-end",
-              }}
-            >
-              <Text color="black" fontSize="13px">
-                0.00000000
-              </Text>
-              <Text color="grey" fontSize="5px">
-                5만 4천원(KRW)
-              </Text>
-            </div>
-          </TokenContent>
-          <Logo src="/chevron-right.svg" width="30px" height="30px" />
-        </MenuItem>
-        <MenuItem>
-          <TokenImage url="/binance-logo.png" />
-          <TokenContent>
-            <Text color="black" fontSize="20px">
-              강남역/인하
-            </Text>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-end",
-              }}
-            >
-              <Text color="black" fontSize="13px">
-                512
-              </Text>
-              <Text color="grey" fontSize="5px">
-                5만 4천원(KRW)
-              </Text>
-            </div>
-          </TokenContent>
-          <Logo src="/chevron-right.svg" width="30px" height="30px" />
-        </MenuItem>
-        <MenuItem>
-          <TokenImage url="/xrp-logo.png" />
-          <TokenContent>
-            <Text color="black" fontSize="20px">
-              양재/여의도
-            </Text>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-end",
-              }}
-            >
-              <Text color="black" fontSize="13px">
-                365.000000
-              </Text>
-              <Text color="grey" fontSize="5px">
-                5만 4천원(KRW)
-              </Text>
-            </div>
-          </TokenContent>
-          <Logo src="/chevron-right.svg" width="30px" height="30px" />
-        </MenuItem>
-        <MenuItem>
-          <TokenImage url="/xrp-logo.png" />
-          <TokenContent>
-            <Text color="black" fontSize="20px">
-              분당/강남
-            </Text>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-end",
-              }}
-            >
-              <Text color="black" fontSize="13px">
-                365.000000
-              </Text>
-              <Text color="grey" fontSize="5px">
-                5만 4천원(KRW)
-              </Text>
-            </div>
-          </TokenContent>
-          <Logo src="/chevron-right.svg" width="30px" height="30px" />
-        </MenuItem>
+        <MenuItemComponent
+          starting={"포인트 거래"}
+          destination={""}
+          ticketAmount={0}
+          tokenAmount={data?.seeProfile?.tokenAmount}
+        />
+        {data?.seeProfile?.tickets.map((ticket) => {
+          return (
+            <MenuItemComponent
+              starting={ticket.fund?.stations[0]?.name}
+              destination={ticket.fund?.stations[1]?.name}
+              ticketAmount={ticket?.amount}
+              tokenAmount={0}
+            />
+          );
+        })}
       </Menu>
     </>
   );

@@ -417,7 +417,7 @@ const Map = (props: propsType) => {
     <MapContainer>
       <Form onSubmit={submitKeyword}>
         <SearchContainer>
-          <BackButton>
+          <BackButton type="button" onClick={() => navigate(-1)}>
             <Logo src="/thick-chevron-left.svg" />
           </BackButton>
           {startingPoint !== "" ? (

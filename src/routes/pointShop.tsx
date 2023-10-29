@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { Button, Logo, PointMenu, Text } from "../components/pointMenu";
 import { RailMenu } from "../components/railMenu";
+import { gql, useQuery } from "@apollo/client";
 
 const PointShopPage = styled.div`
   background-color: white;
@@ -24,7 +25,27 @@ interface PointShopProps {
   isDetail: boolean;
 }
 
+const SEE_PROFILE = gql`
+  query seeProfile {
+    seeProfile {
+      username
+      tokenAmount
+      id
+      tickets {
+        amount
+        fund {
+          id
+          stations {
+            name
+          }
+        }
+      }
+    }
+  }
+`;
+
 export default function PointShop({ isDetail }: PointShopProps) {
+  const { data } = useQuery(SEE_PROFILE);
   return (
     <PointShopPage>
       <div

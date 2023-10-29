@@ -21,11 +21,13 @@ export const TopMenuItem = ({
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
-        padding: "20px 20px",
+        padding: "20px 40px",
         height: "100%",
       }}
     >
-      <Text color="black">{description}</Text>
+      <Text color="black" fontSize="20px">
+        {description}
+      </Text>
       <div
         style={{
           display: "flex",
@@ -34,13 +36,13 @@ export const TopMenuItem = ({
         }}
       >
         <div style={{ paddingBottom: "5px" }}>
-          <Text color="rgba(71, 100, 205, 0.6)" fontSize="12px">
+          <Text color="rgba(71, 100, 205, 0.6)" fontSize="20px">
             {amount}
           </Text>
           <span
             style={{
               fontWeight: "bold",
-              fontSize: "12px",
+              fontSize: "20px",
               paddingLeft: "2px",
               color: "rgba(71, 100, 205, 0.8)",
             }}

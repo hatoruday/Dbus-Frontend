@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
 import { Logo } from "./pointMenu";
 
@@ -27,11 +27,17 @@ interface IconProps {
 }
 
 export default function UserLayout() {
+  const navigate = useNavigate();
   return (
     <Wrapper>
       <TopNavigationBar>
-        <Logo src="/thick-chevron-left.svg" />
-        <Logo src="/Home-Button.svg" width="22px" height="22px" />
+        <Logo src="/thick-chevron-left.svg" onClick={() => navigate(-1)} />
+        <Logo
+          src="/Home-Button.svg"
+          width="22px"
+          height="22px"
+          onClick={() => navigate("/user")}
+        />
       </TopNavigationBar>
       <Outlet />
     </Wrapper>

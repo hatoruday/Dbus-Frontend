@@ -15,10 +15,12 @@ const FundingComponent = styled.div`
 
 const DownComponent = styled.div`
   background-color: rgba(71, 100, 205, 0.12);
+
   width: 100%;
   height: 100%;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: start;
   align-items: center;
 `;
 
@@ -51,6 +53,9 @@ const SEARCH_FUNDS = gql`
       }
       fundAmount
       threshold
+      users {
+        id
+      }
     }
   }
 `;
@@ -62,7 +67,7 @@ export default function ShowRails() {
     starting: { startingX, startingY, startingPoint },
     destination: { destinationX, destinationY, destinationPoint },
   } = location.state;
-  const { data } = useQuery(SEARCH_FUNDS, {
+  const { data, loading } = useQuery(SEARCH_FUNDS, {
     variables: {
       locations: [
         parseFloat(startingX),
@@ -72,10 +77,12 @@ export default function ShowRails() {
       ],
     },
   });
+  const [result, setResult] = useState(data);
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log(data);
+    console.log("data22", data);
+    setResult(data);
     const bounds = new window.kakao.maps.LatLngBounds();
     const startingPosition = new window.kakao.maps.LatLng(
       state.starting.startingY,
@@ -97,7 +104,7 @@ export default function ShowRails() {
 
     let map = new window.kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
     map.setBounds(bounds);
-  }, []);
+  }, [data]);
 
   return (
     <FundingComponent>
@@ -109,7 +116,7 @@ export default function ShowRails() {
             flexDirection: "column",
             width: "100%",
             height: "70%",
-            justifyContent: "space-around",
+            justifyContent: "space-between",
             padding: "0px 20px",
             alignItems: "center",
           }}
@@ -123,50 +130,22 @@ export default function ShowRails() {
               justifyContent: "start",
               width: "100%",
               margin: "20px 0px",
-            }}
-          >
-            현재 노선
-          </div>
-          <TitkcTicketContainer
-            startingPoint={startingPoint}
-            destinationPoint={destinationPoint}
-            totalAmount={100000}
-            currentAmount={75000}
-            totalNumber={100}
-            currentNumber={30}
-            fundIdx={1}
-          />
-          <div
-            style={{
-              color: "black",
-              fontWeight: "bold",
-              fontSize: "15pt",
-              display: "flex",
-              justifyContent: "start",
-              width: "100%",
-              margin: "20px 0px",
+              paddingTop: "30px",
             }}
           >
             현재 생성되어있는 주변 노선
           </div>
-          <TitkcTicketContainer
-            startingPoint={"주안역"}
-            destinationPoint={"인하대 정문"}
-            totalAmount={100000}
-            currentAmount={40000}
-            totalNumber={100}
-            currentNumber={30}
-            fundIdx={2}
-          />
-          <TitkcTicketContainer
-            startingPoint={"부평역"}
-            destinationPoint={"인하대 후문"}
-            totalAmount={100000}
-            currentAmount={50000}
-            totalNumber={100}
-            currentNumber={30}
-            fundIdx={3}
-          />
+          {result?.searchFunds?.map((fund) => (
+            <TitkcTicketContainer
+              startingPoint={fund?.stations[0]?.name}
+              destinationPoint={fund?.stations[1]?.name}
+              totalAmount={fund?.threshold}
+              currentAmount={fund?.fundAmount}
+              totalNumber={16}
+              currentNumber={fund?.users?.length}
+              fundIdx={fund?.id}
+            />
+          ))}
         </div>
       </DownComponent>
       <BottomBar>

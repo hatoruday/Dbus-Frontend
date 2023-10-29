@@ -113,7 +113,15 @@ export const PointMenu = () => {
             1000원
           </Button>
         </MenuItem>
-        <MenuItem>
+        <MenuItem
+          onClick={() => {
+            buyToken({
+              variables: {
+                amount: 2000,
+              },
+            });
+          }}
+        >
           <Text color="rgba(71, 100, 205, 0.85)" fontSize="20px">
             2000 포인트
           </Text>
@@ -121,7 +129,15 @@ export const PointMenu = () => {
             2000원
           </Button>
         </MenuItem>
-        <MenuItem>
+        <MenuItem
+          onClick={() => {
+            buyToken({
+              variables: {
+                amount: 3000,
+              },
+            });
+          }}
+        >
           <Text color="rgba(71, 100, 205, 0.85)" fontSize="20px">
             3000 포인트
           </Text>
@@ -129,7 +145,15 @@ export const PointMenu = () => {
             3000원
           </Button>
         </MenuItem>
-        <MenuItem>
+        <MenuItem
+          onClick={() => {
+            buyToken({
+              variables: {
+                amount: 5000,
+              },
+            });
+          }}
+        >
           <Text color="rgba(71, 100, 205, 0.85)" fontSize="20px">
             5000 포인트
           </Text>
@@ -137,7 +161,15 @@ export const PointMenu = () => {
             5000원
           </Button>
         </MenuItem>
-        <MenuItem>
+        <MenuItem
+          onClick={() => {
+            buyToken({
+              variables: {
+                amount: 10000,
+              },
+            });
+          }}
+        >
           <Text color="rgba(71, 100, 205, 0.85)" fontSize="20px">
             10000 포인트
           </Text>
@@ -145,7 +177,15 @@ export const PointMenu = () => {
             10000원
           </Button>
         </MenuItem>
-        <MenuItem>
+        <MenuItem
+          onClick={() => {
+            buyToken({
+              variables: {
+                amount: 15000,
+              },
+            });
+          }}
+        >
           <Text color="rgba(71, 100, 205, 0.85)" fontSize="20px">
             15000 포인트
           </Text>
@@ -153,7 +193,15 @@ export const PointMenu = () => {
             15000원
           </Button>
         </MenuItem>
-        <MenuItem>
+        <MenuItem
+          onClick={() => {
+            buyToken({
+              variables: {
+                amount: 20000,
+              },
+            });
+          }}
+        >
           <Text color="rgba(71, 100, 205, 0.85)" fontSize="20px">
             20000 포인트
           </Text>
@@ -161,7 +209,15 @@ export const PointMenu = () => {
             20000원
           </Button>
         </MenuItem>
-        <MenuItem>
+        <MenuItem
+          onClick={() => {
+            buyToken({
+              variables: {
+                amount: 30000,
+              },
+            });
+          }}
+        >
           <Text color="rgba(71, 100, 205, 0.85)" fontSize="20px">
             30000 포인트
           </Text>
@@ -169,7 +225,15 @@ export const PointMenu = () => {
             30000원
           </Button>
         </MenuItem>
-        <MenuItem>
+        <MenuItem
+          onClick={() => {
+            buyToken({
+              variables: {
+                amount: 50000,
+              },
+            });
+          }}
+        >
           <Text color="rgba(71, 100, 205, 0.85)" fontSize="20px">
             50000 포인트
           </Text>
@@ -177,7 +241,15 @@ export const PointMenu = () => {
             50000원
           </Button>
         </MenuItem>
-        <MenuItem>
+        <MenuItem
+          onClick={() => {
+            buyToken({
+              variables: {
+                amount: 100000,
+              },
+            });
+          }}
+        >
           <Text color="rgba(71, 100, 205, 0.85)" fontSize="20px">
             100000 포인트
           </Text>

@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import { ProfileBottomContainer } from "../components/profileBottomContainer";
+import { useNavigate } from "react-router-dom";
+import { gql, useQuery } from "@apollo/client";
 
 // 배경 컨테이너 스타일
 const BackgroundContainer = styled.div`
@@ -52,10 +54,9 @@ const InsideContainer = styled.div`
   position: relative;
   z-index: 1;
   box-sizing: border-box;
-  padding-top: 2%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: space-;
   align-items: center;
   width: 100%;
   height: 90%;
@@ -67,9 +68,9 @@ const TopContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+  height: 40%;
   color: black;
-  height: 50%;
-  justify-content: center;
+  justify-content: start;
 `;
 
 const NameTokenContainer = styled.div`
@@ -77,18 +78,19 @@ const NameTokenContainer = styled.div`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  height: 40%;
   width: 100%;
+  border-bottom: 1px solid #d9d9d9;
 `;
 
 const NameRoleContainer = styled.div`
-  color: white;
+  color: black;
   font-size: 30px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
-  background-color: purple;
+  align-items: flex-start;
+
   width: 100%;
   height: 100%;
   text-align: center;
@@ -105,7 +107,7 @@ const Name = styled.div`
   font-size: 30px;
 `;
 const RolContainer = styled.div`
-  padding: 10px;
+  padding: 15px 0px;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
@@ -129,7 +131,7 @@ const Passenger = styled.div`
 const TokenContainer = styled.div`
   background-color: white;
   display: flex;
-  width: 50%;
+  width: 100%;
   height: 100%;
   align-items: center;
   justify-content: space-between;
@@ -140,7 +142,6 @@ const RetainingTicketContainer = styled.div`
   display: flex;
   justify-content: center;
   width: 100%;
-  height: 100%;
   flex-direction: column;
 `;
 
@@ -159,8 +160,9 @@ const IconContainer = styled.div`
 const Token = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: start;
+  justify-content: space-between;
   align-items: center;
+  height: 30%;
 `;
 
 const Title = styled.text`
@@ -168,6 +170,9 @@ const Title = styled.text`
 `;
 
 const SubTitle = styled.text`
+  display: flex;
+  justify-content: start;
+  width: 100%;
   color: grey;
   font-size: 9px;
 `;
@@ -181,13 +186,41 @@ const TicketContentContainer = styled.div`
   display: flex;
   flex-direction: row;
   width: 100%;
-  height: 100%;
+
   align-items: center;
   justify-content: space-around;
 `;
 
-const TicketContent = styled.div``;
+const TicketContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+`;
+
+const SEE_PROFILE = gql`
+  query seeProfile {
+    seeProfile {
+      username
+      tokenAmount
+      id
+      tickets {
+        amount
+        fund {
+          id
+          stations {
+            name
+          }
+        }
+      }
+    }
+  }
+`;
+
 const UserProfilePage = () => {
+  const navigate = useNavigate();
+  const { data } = useQuery(SEE_PROFILE);
+
   return (
     <BackgroundContainer>
       <GradientContainer></GradientContainer>
@@ -197,7 +230,7 @@ const UserProfilePage = () => {
           <NameTokenContainer>
             <NameRoleContainer>
               <NameContainer>
-                <Name>홍길동</Name>
+                <Name>{data?.seeProfile?.username}</Name>
                 <IconContainer>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -223,8 +256,8 @@ const UserProfilePage = () => {
             </NameRoleContainer>
             <TokenContainer>
               <Token>
-                <Title>보유DBT</Title>
-                <SubTitle>400Point</SubTitle>
+                <Title>보유 Point</Title>
+                <SubTitle>{data?.seeProfile?.tokenAmount}</SubTitle>
               </Token>
               <VerticalBar />
               <Token>
@@ -241,26 +274,112 @@ const UserProfilePage = () => {
                   (출발 / 도착)
                 </span>
               </div>
-              <span style={{ fontSize: "7px" }}>모든 티켓 확인하기</span>
+              <span
+                style={{ fontSize: "7px" }}
+                onClick={() => navigate("/user/detail")}
+              >
+                모든 티켓 확인하기{" >"}
+              </span>
             </TicketTitle>
             <TicketContentContainer>
               <TicketContent
-                style={{ display: "flex", flexDirection: "column" }}
+                onClick={() => {
+                  if (data?.seeProfile?.tickets[0]?.amount > 0) {
+                    navigate("/user/consume", {
+                      state: {
+                        userId: data?.seeProfile?.id,
+                        fundId: data?.seeProfile?.tickets[0]?.fund?.id,
+                        railName: [
+                          data?.seeProfile?.tickets[0]?.fund.stations[0]?.name,
+                          data?.seeProfile?.tickets[0]?.fund?.stations[1]?.name,
+                        ],
+                        ticketAmount: data?.seeProfile?.tickets[0]?.amount,
+                      },
+                    });
+                  }
+                }}
               >
-                <span style={{ fontSize: "25px" }}>12</span>
-                <span style={{ fontSize: "10px" }}>인하대/주안</span>
+                <span style={{ fontSize: "25px" }}>
+                  {data?.seeProfile?.tickets[0]?.amount
+                    ? data?.seeProfile?.tickets[0]?.amount
+                    : "-"}
+                </span>
+                <span style={{ fontSize: "10px" }}>
+                  <span style={{ fontSize: "10px" }}>
+                    {data?.seeProfile?.tickets[0]?.fund?.stations[0]?.name
+                      ? data?.seeProfile?.tickets[0]?.fund?.stations[0]?.name
+                      : ""}
+                    /
+                    {data?.seeProfile?.tickets[0]?.fund?.stations[1]?.name
+                      ? data?.seeProfile?.tickets[0]?.fund?.stations[1]?.name
+                      : ""}
+                  </span>
+                </span>
               </TicketContent>
               <TicketContent
-                style={{ display: "flex", flexDirection: "column" }}
+                onClick={() => {
+                  if (data?.seeProfile?.tickets[1]?.amount > 0) {
+                    navigate("/user/consume", {
+                      state: {
+                        userId: data?.seeProfile?.id,
+                        fundId: data?.seeProfile?.tickets[1]?.fund?.id,
+                        railName: [
+                          data?.seeProfile?.tickets[1]?.fund?.stations[0]?.name,
+                          data?.seeProfile?.tickets[1]?.fund?.stations[1]?.name,
+                        ],
+                        ticketAmount: data?.seeProfile?.tickets[1]?.amount,
+                      },
+                    });
+                  }
+                }}
               >
-                <span style={{ fontSize: "25px" }}>12</span>
-                <span style={{ fontSize: "10px" }}>인하대/주안</span>
+                <span style={{ fontSize: "25px" }}>
+                  {data?.seeProfile?.tickets[1]?.amount
+                    ? data?.seeProfile?.tickets[1]?.amount
+                    : "-"}
+                </span>
+                <span style={{ fontSize: "10px" }}>
+                  {data?.seeProfile?.tickets[1]?.fund?.stations[0]?.name
+                    ? data?.seeProfile?.tickets[1]?.fund?.stations[0]?.name
+                    : ""}
+                  /
+                  {data?.seeProfile?.tickets[1]?.fund?.stations[1]?.name
+                    ? data?.seeProfile?.tickets[1]?.fund?.stations[1]?.name
+                    : ""}
+                </span>
               </TicketContent>
               <TicketContent
-                style={{ display: "flex", flexDirection: "column" }}
+                onClick={() => {
+                  if (data?.seeProfile?.tickets[2]?.amount > 0) {
+                    navigate("/user/consume", {
+                      state: {
+                        userId: data?.seeProfile?.id,
+                        fundId: data?.seeProfile?.tickets[2]?.fund?.id,
+                        railName: [
+                          data?.seeProfile?.tickets[2]?.fund?.stations[0]?.name,
+                          data?.seeProfile?.tickets[2]?.fund?.stations[1]?.name,
+                        ],
+                        ticketAmount: data?.seeProfile?.tickets[2]?.amount,
+                      },
+                    });
+                  }
+                }}
               >
-                <span style={{ fontSize: "25px" }}>12</span>
-                <span style={{ fontSize: "10px" }}>인하대/주안</span>
+                <span style={{ fontSize: "25px" }}>
+                  {" "}
+                  {data?.seeProfile?.tickets[2]?.amount
+                    ? data?.seeProfile?.tickets[2]?.amount
+                    : "-"}
+                </span>
+                <span style={{ fontSize: "10px" }}>
+                  {data?.seeProfile?.tickets[2]?.fund?.stations[0]?.name
+                    ? data?.seeProfile?.tickets[2]?.fund?.stations[0]?.name
+                    : ""}
+                  /
+                  {data?.seeProfile?.tickets[2]?.fund?.stations[1]?.name
+                    ? data?.seeProfile?.tickets[2]?.fund?.stations[1]?.name
+                    : ""}
+                </span>
               </TicketContent>
             </TicketContentContainer>
           </RetainingTicketContainer>

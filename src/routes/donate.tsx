@@ -66,9 +66,9 @@ const BottomBar = styled.div`
   background-color: #4764cd;
 `;
 
-const BUY_TOKEN = gql`
-  mutation buyToken($amount: Int!) {
-    buyToken(amount: $amount) {
+const DONATE_FUND = gql`
+  mutation donateFund($fundId: Int!, $amount: Int!) {
+    donateFund(fundId: $fundId, amount: $amount) {
       ok
       error
     }
@@ -77,7 +77,7 @@ const BUY_TOKEN = gql`
 
 export default function Donate({}) {
   const location = useLocation();
-  const [buyToken, { loading }] = useMutation(BUY_TOKEN);
+  const [donateFund, { loading }] = useMutation(DONATE_FUND);
   const state = location.state;
   const {
     starting: { startingX, startingY, startingPoint },
@@ -234,23 +234,24 @@ export default function Donate({}) {
       <Menu>
         <MenuItem
           onClick={() => {
-            buyToken({
+            donateFund({
               variables: {
-                amount: 1000,
+                fundId: fundIdx,
+                amount: 4000,
               },
             });
           }}
         >
           <Text color="rgba(71, 100, 205, 0.85)" fontSize="20px">
-            1000 포인트
+            1 티켓
           </Text>
           <Button color="rgba(71, 100, 205, 0.8)" fontSize="15px" width="95px">
-            1000원
+            4000P
           </Button>
         </MenuItem>
         <MenuItem
           onClick={() => {
-            buyToken({
+            donateFund({
               variables: {
                 amount: 1000,
               },
@@ -266,7 +267,7 @@ export default function Donate({}) {
         </MenuItem>
         <MenuItem
           onClick={() => {
-            buyToken({
+            donateFund({
               variables: {
                 amount: 1000,
               },
@@ -282,7 +283,7 @@ export default function Donate({}) {
         </MenuItem>
         <MenuItem
           onClick={() => {
-            buyToken({
+            donateFund({
               variables: {
                 amount: 1000,
               },
@@ -298,7 +299,7 @@ export default function Donate({}) {
         </MenuItem>
         <MenuItem
           onClick={() => {
-            buyToken({
+            donateFund({
               variables: {
                 amount: 1000,
               },
@@ -314,7 +315,7 @@ export default function Donate({}) {
         </MenuItem>
         <MenuItem
           onClick={() => {
-            buyToken({
+            donateFund({
               variables: {
                 amount: 1000,
               },
@@ -330,7 +331,7 @@ export default function Donate({}) {
         </MenuItem>
         <MenuItem
           onClick={() => {
-            buyToken({
+            donateFund({
               variables: {
                 amount: 1000,
               },
@@ -346,7 +347,7 @@ export default function Donate({}) {
         </MenuItem>
         <MenuItem
           onClick={() => {
-            buyToken({
+            donateFund({
               variables: {
                 amount: 1000,
               },
@@ -362,7 +363,7 @@ export default function Donate({}) {
         </MenuItem>
         <MenuItem
           onClick={() => {
-            buyToken({
+            donateFund({
               variables: {
                 amount: 1000,
               },
@@ -378,7 +379,7 @@ export default function Donate({}) {
         </MenuItem>
         <MenuItem
           onClick={() => {
-            buyToken({
+            donateFund({
               variables: {
                 amount: 1000,
               },
