@@ -3,9 +3,9 @@ import { Button, Logo, Text } from "../components/pointMenu";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
-  AcheivementRateBar,
   Achievment,
   NotAchievment,
+  StrongText,
   TitkcTicketContainer,
 } from "../components/TitleFundingContainer";
 
@@ -37,6 +37,7 @@ export const TitleFundingContainer = styled.div`
 `;
 
 const BottomBar = styled.div`
+  cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -55,6 +56,14 @@ const DetailContainer = styled.div`
   align-items: start;
   width: 100%;
 `;
+const AcheivementRateBar = styled.div`
+  width: 90%;
+  height: 30px;
+  border-radius: 30px;
+  background-color: #d9d9d9;
+  display: flex;
+  position: relative;
+`;
 
 export default function ShowFund({}) {
   const location = useLocation();
@@ -64,11 +73,15 @@ export default function ShowFund({}) {
     destination: { destinationX, destinationY, destinationPoint },
     fund: { fundIdx, totalAmount, currentAmount, totalNumber, currentNumber },
   } = location.state;
-  const acheivementRate = (currentAmount / totalAmount) * 100;
-  const numberRate = (currentNumber / totalNumber) * 100;
+  var acheivementRate = (currentAmount / totalAmount) * 100;
+  acheivementRate = acheivementRate > 100 ? 100 : acheivementRate;
+
+  var numberRate = (currentNumber / totalNumber) * 100;
+  numberRate = numberRate > 100 ? 100 : numberRate;
   const averageAmount = currentAmount / currentNumber;
-  const totalAverageAmount = totalAmount / totalNumber;
-  const averageAmountRate = (averageAmount / totalAverageAmount) * 100;
+  const totalAverageAmount = Math.floor(currentAmount / totalNumber);
+  var averageAmountRate = (averageAmount / totalAverageAmount) * 100;
+  averageAmountRate = averageAmount > 100 ? 100 : averageAmount;
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -122,7 +135,7 @@ export default function ShowFund({}) {
           >
             <Button color="rgba(71, 100, 205, 0.5)">
               <Text color="white" fontSize="15px">
-                펀딩중
+                {acheivementRate == 100 ? "종료" : "펀딩중"}
               </Text>
             </Button>
             <div
@@ -141,14 +154,14 @@ export default function ShowFund({}) {
           </div>
           <DetailContainer>
             <Text color="black" fontSize="12px">
-              운행기간 10.1~10.31 월 화 수 목 금 운행
+              운행기간 11.1~11.31 월 화 수 목 금 운행
             </Text>
             <Text color="black" fontSize="12px">
-              운행시간 17:30~
+              운행시간 07:00~
             </Text>
 
             <Text color="black" fontSize="12px">
-              탑승장소 하이테크센터
+              탑승장소 {startingPoint}
             </Text>
           </DetailContainer>
 
@@ -160,112 +173,109 @@ export default function ShowFund({}) {
               style={{
                 display: "flex",
                 width: "100%",
-                justifyContent: "space-between",
+                justifyContent: "center",
+                alignItems: "center",
               }}
             >
               <AcheivementRateBar id="acheivementbar">
                 <Achievment rate={acheivementRate}>
-                  <Text color="#d9d9d9" fontSize="10px">
-                    달성률 {acheivementRate} %
-                  </Text>
+                  <div
+                    style={{
+                      position: "absolute",
+                      left: "20%",
+                      width: "100px",
+                      zIndex: "1",
+                    }}
+                  >
+                    <StrongText>달성률 {acheivementRate} %</StrongText>
+                  </div>
                 </Achievment>
                 <NotAchievment rate={acheivementRate}>
-                  <Text color="#d9d9d9" fontSize="10px">
-                    {totalAmount - currentAmount}
-                  </Text>
+                  <div
+                    style={{
+                      position: "absolute",
+                      right: "20%",
+                      width: "100px",
+                      zIndex: "1",
+                    }}
+                  >
+                    <StrongText>
+                      {totalAmount - currentAmount < 0
+                        ? 0
+                        : totalAmount - currentAmount}
+                      KRW
+                    </StrongText>
+                  </div>
                 </NotAchievment>
               </AcheivementRateBar>
-              <Button
-                color="#4764cd"
-                onClick={() => {
-                  navigate("/user/showfund", {
-                    state: {
-                      starting: { startingX, startingY, startingPoint },
-                      destination: {
-                        destinationX,
-                        destinationY,
-                        destinationPoint,
-                      },
-                    },
-                  });
-                }}
-              >
-                Fund
-              </Button>
             </div>
             <div
               style={{
                 display: "flex",
                 width: "100%",
-                justifyContent: "space-between",
+                justifyContent: "center",
               }}
             >
               <AcheivementRateBar id="acheivementbar">
                 <Achievment rate={numberRate}>
-                  <Text color="#d9d9d9" fontSize="10px">
-                    참여인원
-                  </Text>
+                  <div
+                    style={{
+                      position: "absolute",
+                      left: "20%",
+                      width: "100px",
+                      zIndex: "1",
+                    }}
+                  >
+                    <StrongText>참여인원</StrongText>
+                  </div>
                 </Achievment>
                 <NotAchievment rate={numberRate}>
-                  <Text color="#d9d9d9" fontSize="10px">
-                    {currentNumber} 펀딩 완료
-                  </Text>
+                  <div
+                    style={{
+                      position: "absolute",
+                      right: "20%",
+                      width: "100px",
+                      zIndex: "1",
+                    }}
+                  >
+                    <StrongText>{currentNumber}명 펀딩 중</StrongText>
+                  </div>
                 </NotAchievment>
               </AcheivementRateBar>
-              <Button
-                color="#4764cd"
-                onClick={() => {
-                  navigate("/user/showfund", {
-                    state: {
-                      starting: { startingX, startingY, startingPoint },
-                      destination: {
-                        destinationX,
-                        destinationY,
-                        destinationPoint,
-                      },
-                    },
-                  });
-                }}
-              >
-                Fund
-              </Button>
             </div>
             <div
               style={{
                 display: "flex",
                 width: "100%",
-                justifyContent: "space-between",
+                justifyContent: "center",
               }}
             >
               <AcheivementRateBar id="acheivementbar">
                 <Achievment rate={averageAmountRate}>
-                  <Text color="#d9d9d9" fontSize="10px">
-                    1인당 평균 펀딩 금액
-                  </Text>
+                  <div
+                    style={{
+                      position: "absolute",
+                      left: "20%",
+                      width: "100px",
+                      zIndex: "1",
+                    }}
+                  >
+                    <StrongText>1인당 평균 펀딩 금액</StrongText>
+                  </div>
                 </Achievment>
                 <NotAchievment rate={averageAmountRate}>
-                  <Text color="#d9d9d9" fontSize="10px">
-                    {totalAverageAmount} KRW
-                  </Text>
+                  <div
+                    style={{
+                      position: "absolute",
+                      right: "20%",
+                      width: "100px",
+                      zIndex: "1",
+                    }}
+                  >
+                    <StrongText>{totalAverageAmount} KRW</StrongText>
+                  </div>
                 </NotAchievment>
               </AcheivementRateBar>
-              <Button
-                color="#4764cd"
-                onClick={() => {
-                  navigate("/user/showfund", {
-                    state: {
-                      starting: { startingX, startingY, startingPoint },
-                      destination: {
-                        destinationX,
-                        destinationY,
-                        destinationPoint,
-                      },
-                    },
-                  });
-                }}
-              >
-                Fund
-              </Button>
             </div>
           </TitleFundingContainer>
         </div>
@@ -290,8 +300,9 @@ export default function ShowFund({}) {
               margin: "7px 0px",
             }}
           >
-            달성률 {100 - acheivementRate}% ({totalAmount - currentAmount}KRW)를
-            채우면 노선이 개설됩니다.
+            달성률 {100 - acheivementRate}% (
+            {totalAmount - currentAmount < 0 ? 0 : totalAmount - currentAmount}
+            KRW)를 채우면 노선이 개설됩니다.
           </div>
           <div
             style={{
@@ -312,7 +323,11 @@ export default function ShowFund({}) {
             navigate("/user/donate", {
               state: {
                 starting: { startingX, startingY, startingPoint },
-                destination: { destinationX, destinationY, destinationPoint },
+                destination: {
+                  destinationX,
+                  destinationY,
+                  destinationPoint,
+                },
                 fund: {
                   fundIdx,
                   totalAmount,
@@ -324,7 +339,7 @@ export default function ShowFund({}) {
             });
           }}
         >
-          펀딩하기
+          펀딩
         </Text>
       </BottomBar>
     </FundingComponent>

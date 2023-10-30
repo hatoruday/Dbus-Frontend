@@ -20,6 +20,7 @@ import {
   Wrapper,
 } from "../components/introduction-components";
 import { Title } from "../components/auth-components";
+import { Logo } from "../components/pointMenu";
 
 interface InitIntroductionProps {
   setIndex: Dispatch<SetStateAction<number>>;
@@ -35,7 +36,16 @@ interface currentIndexType {
 }
 const ProgressIndicator = ({ currentIndex }: currentIndexType) => {
   return (
-    <div>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        height: "50%",
+        gap: "10px",
+        padding: "10px 20px",
+      }}
+    >
       <Dot active={currentIndex === 1} />
       <Dot active={currentIndex === 2} />
       <Dot active={currentIndex === 3} />
@@ -72,21 +82,7 @@ const OtherIntroduction: React.FC<OtherIntroductionProps> = ({
         <IntroductionBar>
           <ProgressIndicator currentIndex={index} />
           <OtherIcon onClick={() => setIndex(index + 1)}>
-            {" "}
-            {/* onClick에서 바로 함수를 넘겨주면 undefined를 return 받음. -> typescript오류. -> arrayfunction을 사용해야함.*/}
-            <svg
-              color="blue"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              className="w-6 h-6"
-            >
-              <path
-                fillRule="evenodd"
-                d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zm4.28 10.28a.75.75 0 000-1.06l-3-3a.75.75 0 10-1.06 1.06l1.72 1.72H8.25a.75.75 0 000 1.5h5.69l-1.72 1.72a.75.75 0 101.06 1.06l3-3z"
-                clipRule="evenodd"
-              />
-            </svg>
+            <Logo src="/chevron-right.svg" />
           </OtherIcon>
         </IntroductionBar>
       </NewDown>

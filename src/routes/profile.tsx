@@ -2,6 +2,8 @@ import styled from "styled-components";
 import { ProfileBottomContainer } from "../components/profileBottomContainer";
 import { useNavigate } from "react-router-dom";
 import { gql, useQuery } from "@apollo/client";
+import { useEffect, useState } from "react";
+import LoadingScreen from "../components/loading-screen";
 
 // 배경 컨테이너 스타일
 const BackgroundContainer = styled.div`
@@ -196,6 +198,7 @@ const TicketContent = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 10px;
+  cursor: pointer;
 `;
 
 const SEE_PROFILE = gql`
@@ -219,9 +222,17 @@ const SEE_PROFILE = gql`
 
 const UserProfilePage = () => {
   const navigate = useNavigate();
-  const { data } = useQuery(SEE_PROFILE);
+  const { data, loading } = useQuery(SEE_PROFILE, {
+    fetchPolicy: "network-only",
+  });
+  const [result, setResult] = useState(data);
 
-  return (
+  useEffect(() => {
+    setResult(data);
+  }, [data, loading]);
+  return loading ? (
+    <LoadingScreen />
+  ) : (
     <BackgroundContainer>
       <GradientContainer></GradientContainer>
       <Circle />
@@ -230,7 +241,7 @@ const UserProfilePage = () => {
           <NameTokenContainer>
             <NameRoleContainer>
               <NameContainer>
-                <Name>{data?.seeProfile?.username}</Name>
+                <Name>{result?.seeProfile?.username}</Name>
                 <IconContainer>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -257,7 +268,7 @@ const UserProfilePage = () => {
             <TokenContainer>
               <Token>
                 <Title>보유 Point</Title>
-                <SubTitle>{data?.seeProfile?.tokenAmount}</SubTitle>
+                <SubTitle>{result?.seeProfile?.tokenAmount}</SubTitle>
               </Token>
               <VerticalBar />
               <Token>
@@ -275,7 +286,7 @@ const UserProfilePage = () => {
                 </span>
               </div>
               <span
-                style={{ fontSize: "7px" }}
+                style={{ fontSize: "7px", cursor: "pointer" }}
                 onClick={() => navigate("/user/detail")}
               >
                 모든 티켓 확인하기{" >"}
@@ -284,82 +295,96 @@ const UserProfilePage = () => {
             <TicketContentContainer>
               <TicketContent
                 onClick={() => {
-                  if (data?.seeProfile?.tickets[0]?.amount > 0) {
+                  if (result?.seeProfile?.tickets[0]?.amount > 0) {
                     navigate("/user/consume", {
                       state: {
-                        userId: data?.seeProfile?.id,
-                        fundId: data?.seeProfile?.tickets[0]?.fund?.id,
+                        userId: result?.seeProfile?.id,
+                        fundId: result?.seeProfile?.tickets[0]?.fund?.id,
                         railName: [
-                          data?.seeProfile?.tickets[0]?.fund.stations[0]?.name,
-                          data?.seeProfile?.tickets[0]?.fund?.stations[1]?.name,
+                          result?.seeProfile?.tickets[0]?.fund.stations[0]
+                            ?.name,
+                          result?.seeProfile?.tickets[0]?.fund?.stations[1]
+                            ?.name,
                         ],
-                        ticketAmount: data?.seeProfile?.tickets[0]?.amount,
+                        ticketAmount: result?.seeProfile?.tickets[0]?.amount,
                       },
                     });
                   }
                 }}
               >
                 <span style={{ fontSize: "25px" }}>
-                  {data?.seeProfile?.tickets[0]?.amount
-                    ? data?.seeProfile?.tickets[0]?.amount
+                  {result?.seeProfile?.tickets[0]?.amount
+                    ? result?.seeProfile?.tickets[0]?.amount
                     : "-"}
                 </span>
                 <span style={{ fontSize: "10px" }}>
                   <span style={{ fontSize: "10px" }}>
-                    {data?.seeProfile?.tickets[0]?.fund?.stations[0]?.name
-                      ? data?.seeProfile?.tickets[0]?.fund?.stations[0]?.name
+                    {result?.seeProfile?.tickets[0]?.fund?.stations[0]?.name
+                      ? result?.seeProfile?.tickets[0]?.fund?.stations[0]?.name.split(
+                          " "
+                        )[0]
                       : ""}
                     /
-                    {data?.seeProfile?.tickets[0]?.fund?.stations[1]?.name
-                      ? data?.seeProfile?.tickets[0]?.fund?.stations[1]?.name
+                    {result?.seeProfile?.tickets[0]?.fund?.stations[1]?.name
+                      ? result?.seeProfile?.tickets[0]?.fund?.stations[1]?.name.split(
+                          " "
+                        )[0]
                       : ""}
                   </span>
                 </span>
               </TicketContent>
               <TicketContent
                 onClick={() => {
-                  if (data?.seeProfile?.tickets[1]?.amount > 0) {
+                  if (result?.seeProfile?.tickets[1]?.amount > 0) {
                     navigate("/user/consume", {
                       state: {
-                        userId: data?.seeProfile?.id,
-                        fundId: data?.seeProfile?.tickets[1]?.fund?.id,
+                        userId: result?.seeProfile?.id,
+                        fundId: result?.seeProfile?.tickets[1]?.fund?.id,
                         railName: [
-                          data?.seeProfile?.tickets[1]?.fund?.stations[0]?.name,
-                          data?.seeProfile?.tickets[1]?.fund?.stations[1]?.name,
+                          result?.seeProfile?.tickets[1]?.fund?.stations[0]
+                            ?.name,
+                          result?.seeProfile?.tickets[1]?.fund?.stations[1]
+                            ?.name,
                         ],
-                        ticketAmount: data?.seeProfile?.tickets[1]?.amount,
+                        ticketAmount: result?.seeProfile?.tickets[1]?.amount,
                       },
                     });
                   }
                 }}
               >
                 <span style={{ fontSize: "25px" }}>
-                  {data?.seeProfile?.tickets[1]?.amount
-                    ? data?.seeProfile?.tickets[1]?.amount
+                  {result?.seeProfile?.tickets[1]?.amount
+                    ? result?.seeProfile?.tickets[1]?.amount
                     : "-"}
                 </span>
                 <span style={{ fontSize: "10px" }}>
-                  {data?.seeProfile?.tickets[1]?.fund?.stations[0]?.name
-                    ? data?.seeProfile?.tickets[1]?.fund?.stations[0]?.name
+                  {result?.seeProfile?.tickets[1]?.fund?.stations[0]?.name
+                    ? result?.seeProfile?.tickets[1]?.fund?.stations[0]?.name.split(
+                        " "
+                      )[0]
                     : ""}
                   /
-                  {data?.seeProfile?.tickets[1]?.fund?.stations[1]?.name
-                    ? data?.seeProfile?.tickets[1]?.fund?.stations[1]?.name
+                  {result?.seeProfile?.tickets[1]?.fund?.stations[1]?.name
+                    ? result?.seeProfile?.tickets[1]?.fund?.stations[1]?.name.split(
+                        " "
+                      )[0]
                     : ""}
                 </span>
               </TicketContent>
               <TicketContent
                 onClick={() => {
-                  if (data?.seeProfile?.tickets[2]?.amount > 0) {
+                  if (result?.seeProfile?.tickets[2]?.amount > 0) {
                     navigate("/user/consume", {
                       state: {
-                        userId: data?.seeProfile?.id,
-                        fundId: data?.seeProfile?.tickets[2]?.fund?.id,
+                        userId: result?.seeProfile?.id,
+                        fundId: result?.seeProfile?.tickets[2]?.fund?.id,
                         railName: [
-                          data?.seeProfile?.tickets[2]?.fund?.stations[0]?.name,
-                          data?.seeProfile?.tickets[2]?.fund?.stations[1]?.name,
+                          result?.seeProfile?.tickets[2]?.fund?.stations[0]
+                            ?.name,
+                          result?.seeProfile?.tickets[2]?.fund?.stations[1]
+                            ?.name,
                         ],
-                        ticketAmount: data?.seeProfile?.tickets[2]?.amount,
+                        ticketAmount: result?.seeProfile?.tickets[2]?.amount,
                       },
                     });
                   }
@@ -367,17 +392,19 @@ const UserProfilePage = () => {
               >
                 <span style={{ fontSize: "25px" }}>
                   {" "}
-                  {data?.seeProfile?.tickets[2]?.amount
-                    ? data?.seeProfile?.tickets[2]?.amount
+                  {result?.seeProfile?.tickets[2]?.amount
+                    ? result?.seeProfile?.tickets[2]?.amount.split(" ")[0]
                     : "-"}
                 </span>
                 <span style={{ fontSize: "10px" }}>
-                  {data?.seeProfile?.tickets[2]?.fund?.stations[0]?.name
-                    ? data?.seeProfile?.tickets[2]?.fund?.stations[0]?.name
+                  {result?.seeProfile?.tickets[2]?.fund?.stations[0]?.name
+                    ? result?.seeProfile?.tickets[2]?.fund?.stations[0]?.name.split(
+                        " "
+                      )[0]
                     : ""}
                   /
-                  {data?.seeProfile?.tickets[2]?.fund?.stations[1]?.name
-                    ? data?.seeProfile?.tickets[2]?.fund?.stations[1]?.name
+                  {result?.seeProfile?.tickets[2]?.fund?.stations[1]?.name
+                    ? result?.seeProfile?.tickets[2]?.fund?.stations[1]?.name
                     : ""}
                 </span>
               </TicketContent>

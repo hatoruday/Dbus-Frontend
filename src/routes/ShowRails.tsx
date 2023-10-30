@@ -81,7 +81,6 @@ export default function ShowRails() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("data22", data);
     setResult(data);
     const bounds = new window.kakao.maps.LatLngBounds();
     const startingPosition = new window.kakao.maps.LatLng(
@@ -141,7 +140,7 @@ export default function ShowRails() {
               destinationPoint={fund?.stations[1]?.name}
               totalAmount={fund?.threshold}
               currentAmount={fund?.fundAmount}
-              totalNumber={16}
+              totalNumber={10}
               currentNumber={fund?.users?.length}
               fundIdx={fund?.id}
             />

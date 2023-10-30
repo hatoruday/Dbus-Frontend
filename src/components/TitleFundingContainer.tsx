@@ -9,29 +9,38 @@ export const AcheivementRateBar = styled.div`
   border-radius: 30px;
   background-color: #d9d9d9;
   display: flex;
+  position: relative;
 `;
 
 interface AchievementInterface {
   rate: number;
 }
 export const Achievment = styled.div<AchievementInterface>`
+  position: absolute;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: ${(props) => props.rate}%;
+  width: ${(props) => (props.rate > 100 ? 100 : props.rate)}%;
+  left: 0%;
   height: 100%;
   border-radius: 30px;
   background-color: #4764cd;
 `;
 
 export const NotAchievment = styled.div<AchievementInterface>`
+  position: absolute;
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100 - ${(props) => props.rate}%;
+  right: 0%;
   height: 100%;
   border-radius: 30px;
   background-color: #aeaeae;
+`;
+export const StrongText = styled.div`
+  font-size: 9pt;
+  text-align: center;
 `;
 export const TitkcTicketContainer = ({
   startingPoint,
@@ -64,14 +73,33 @@ export const TitkcTicketContainer = ({
       >
         <AcheivementRateBar id="acheivementbar">
           <Achievment rate={rate}>
-            <Text color="#d9d9d9" fontSize="10px">
-              달성률 {rate} %
-            </Text>
+            <div
+              style={{
+                position: "absolute",
+                left: "20%",
+                width: "100px",
+                zIndex: "1",
+              }}
+            >
+              <StrongText>달성률 {rate > 100 ? 100 : rate} %</StrongText>
+            </div>
           </Achievment>
           <NotAchievment rate={rate}>
-            <Text color="#d9d9d9" fontSize="10px">
-              {totalAmount - currentAmount}KRW
-            </Text>
+            <div
+              style={{
+                position: "absolute",
+                right: "0%",
+                width: "100px",
+                zIndex: "1",
+              }}
+            >
+              <StrongText>
+                {totalAmount - currentAmount < 0
+                  ? 0
+                  : totalAmount - currentAmount}{" "}
+                KRW
+              </StrongText>
+            </div>
           </NotAchievment>
         </AcheivementRateBar>
         <Button

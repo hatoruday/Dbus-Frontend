@@ -74,12 +74,14 @@ export const Icon = styled.div`
 
 export const OtherIcon = styled.button`
   cursor: pointer;
+  background-color: #4064cd;
   display: flex;
   align-items: center;
   flex-direction: column;
   justify-content: center;
-  height: 70px;
-  width: 70px;
+  border: none;
+  height: 50px;
+  width: 50px;
   font-size: 15px;
   border-radius: 50%;
 `;
@@ -92,7 +94,7 @@ export const NewTop = styled.div`
 `;
 export const IntroductionImage = styled.img`
   justify-content: end;
-  padding: 0 5%;
+
   max-width: 100%;
   max-height: 100%;
   align-items: center;
@@ -101,6 +103,8 @@ export const IntroductionImage = styled.img`
 export const IntroductionTitle = styled.h1`
   font-size: 25px;
   color: black;
+  display: flex;
+  align-items: center;
 `;
 
 export const IntroductionSubTitle = styled.h3`
@@ -121,19 +125,20 @@ export const IntroductionBar = styled.div`
   flex-direction: row;
   justify-content: space-between;
   padding-right: 10%;
+  align-items: center;
 `;
 
 export const Dot = styled.div<DotProps>`
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background-color: blue;
+  background-color: #4764cd;
 
   ${({ active }) =>
     active &&
     css`
       width: 20px;
       height: 20px;
-      background-color: blue;
+      background-color: #4764cd;
     `}
 `;

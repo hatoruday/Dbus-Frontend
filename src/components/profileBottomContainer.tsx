@@ -28,6 +28,7 @@ const Menu = styled.div`
 `;
 
 const MenuItem = styled.div`
+  cursor: pointer;
   border-bottom: 1px solid lightgrey;
   width: 100%;
   height: 10%;
@@ -131,15 +132,16 @@ export const ProfileBottomContainer = () => {
             </svg>
           </MenuIcon>
         </MenuItem>
-        <MenuItem>
+        <MenuItem
+          onClick={() => {
+            navigate("/user/shop");
+          }}
+        >
           <div
             style={{
               display: "flex",
               flexDirection: "row",
               alignItems: "center",
-            }}
-            onClick={() => {
-              navigate("/user/shop");
             }}
           >
             <MenuIcon>
@@ -266,7 +268,11 @@ export const ProfileBottomContainer = () => {
           </MenuIcon>
         </MenuItem>
 
-        <MenuItem>
+        <MenuItem
+          onClick={() => {
+            navigate("/");
+          }}
+        >
           <div
             style={{
               display: "flex",
@@ -309,7 +315,11 @@ export const ProfileBottomContainer = () => {
             </svg>
           </MenuIcon>
         </MenuItem>
-        <MenuItem>
+        <MenuItem
+          onClick={() => {
+            logUserOut();
+          }}
+        >
           <div
             style={{
               display: "flex",
@@ -335,11 +345,7 @@ export const ProfileBottomContainer = () => {
             </MenuIcon>
             로그아웃
           </div>
-          <MenuIcon
-            onClick={() => {
-              logUserOut();
-            }}
-          >
+          <MenuIcon>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"

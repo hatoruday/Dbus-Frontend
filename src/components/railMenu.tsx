@@ -22,6 +22,7 @@ const MenuItem = styled.div`
 `;
 
 const TokenContent = styled.div`
+  cursor: pointer;
   padding: 0px 20px;
   display: flex;
   justify-content: space-between;
@@ -85,7 +86,7 @@ const MenuItemComponent = ({
     >
       <TokenImage url="/ticket.png" />
       <TokenContent>
-        <Text color="black" fontSize="20px">
+        <Text color="black" fontSize="17px">
           {starting.split(" ")[0]} - {destination.split(" ")[0]}
         </Text>
         <div
@@ -95,12 +96,20 @@ const MenuItemComponent = ({
             alignItems: "flex-end",
           }}
         >
-          <Text color="black" fontSize="20px">
-            {tokenAmount == 0 ? ticketAmount : tokenAmount}
-          </Text>
-          <Text color="grey" fontSize="10px">
-            {tokenAmount == 0 ? ticketAmount * 4500 : tokenAmount}원(KRW)
-          </Text>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <Text color="black" fontSize="20px">
+              {tokenAmount == 0 ? ticketAmount : tokenAmount}
+            </Text>
+            <Text color="grey" fontSize="10px">
+              {tokenAmount == 0 ? ticketAmount * 4500 : tokenAmount}원(KRW)
+            </Text>
+          </div>
         </div>
       </TokenContent>
       <Logo src="/chevron-right.svg" width="30px" height="30px" />

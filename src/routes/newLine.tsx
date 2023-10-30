@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { Logo, Text } from "../components/pointMenu";
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { gql, useMutation } from "@apollo/client";
 
 const NewRailComponent = styled.div`
@@ -68,23 +68,44 @@ const BottomBar = styled.div`
 const CREATE_FUND = gql`
   mutation createFund($stations: [String]!, $locations: [Float]!) {
     createFund(stations: $stations, locations: $locations) {
-      ok
-      error
+      id
+      threshold
+      fundAmount
     }
   }
 `;
 
 export default function NewLine() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const state = location.state;
+  const {
+    starting: { startingX, startingY, startingPoint },
+    destination: { destinationX, destinationY, destinationPoint },
+  } = location.state;
   const onCompleted = (data) => {
     const {
-      createFund: { ok, error },
+      createFund: { id, threshold, fundAmount },
     } = data;
-    console.log(ok);
+
+    navigate("/user/showfund", {
+      state: {
+        starting: { startingX, startingY, startingPoint },
+        destination: { destinationX, destinationY, destinationPoint },
+        fund: {
+          fundIdx: id,
+          totalAmount: threshold,
+          currentAmount: fundAmount,
+          totalNumber: 31,
+          currentNumber: 0,
+        },
+      },
+    });
   };
   const [createFund, { loading }] = useMutation(CREATE_FUND, { onCompleted });
-  const location = useLocation();
+
   const [time, setTime] = useState("");
-  const state = location.state;
+
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {
       target: { name, value },

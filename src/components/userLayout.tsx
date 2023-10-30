@@ -17,7 +17,7 @@ const TopNavigationBar = styled.div`
   justify-content: space-between;
   width: 100%;
   background-color: white;
-  padding: 20px 30px;
+  padding: 16px 30px;
 `;
 
 interface IconProps {

@@ -8,6 +8,7 @@ import {
   Wrapper,
 } from "../components/auth-components";
 import { gql, useMutation } from "@apollo/client";
+import LoadingScreen from "../components/loading-screen";
 
 const CREATE_ACCOUNT_MUTATION = gql`
   mutation createAccount(
@@ -23,7 +24,15 @@ const CREATE_ACCOUNT_MUTATION = gql`
 `;
 
 export default function CreateAccount() {
-  const [createAccount] = useMutation(CREATE_ACCOUNT_MUTATION);
+  const onCompleted = () => {
+    if (loading) {
+      return;
+    }
+    navigate("/login");
+  };
+  const [createAccount, { loading }] = useMutation(CREATE_ACCOUNT_MUTATION, {
+    onCompleted, //이거 왜 바로 콜백됨.. 대기시간 없이
+  });
   const navigate = useNavigate();
   const [isLoading, setLoading] = useState(false);
   const [name, setName] = useState("");
@@ -54,14 +63,15 @@ export default function CreateAccount() {
           password,
         },
       });
-      navigate("/login");
     } catch (e) {
       console.log(e);
     } finally {
       setLoading(false);
     }
   };
-  return (
+  return loading ? (
+    <LoadingScreen />
+  ) : (
     <Wrapper>
       <Title>DBUS 회원가입</Title>
       <Form onSubmit={onSubmit}>

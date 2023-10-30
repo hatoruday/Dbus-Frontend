@@ -46,6 +46,7 @@ const SEE_PROFILE = gql`
 
 export default function PointShop({ isDetail }: PointShopProps) {
   const { data } = useQuery(SEE_PROFILE);
+
   return (
     <PointShopPage>
       <div
@@ -113,7 +114,7 @@ export default function PointShop({ isDetail }: PointShopProps) {
               현재 보유하고 있는 포인트
             </Text>
             <Text color="rgba(71, 100, 205, 0.85)" fontSize="20px">
-              0점
+              {data?.seeProfile?.tokenAmount}P
             </Text>
           </>
         )}

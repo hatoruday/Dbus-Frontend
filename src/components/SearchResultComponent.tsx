@@ -21,7 +21,12 @@ const ScrollWrapper = styled.div`
   overflow-y: auto;
   z-index: 5;
 `;
-const PlacesList = styled.ul``;
+const PlacesList = styled.ul`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+`;
 interface SearchResultParam {
   keyword: string;
 }

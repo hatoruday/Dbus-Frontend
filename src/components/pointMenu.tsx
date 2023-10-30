@@ -1,6 +1,7 @@
 import { gql, useMutation } from "@apollo/client";
 import styled from "styled-components";
 import LoadingScreen from "./loading-screen";
+import { useNavigate } from "react-router-dom";
 
 interface ButtonProps {
   color?: string;
@@ -56,6 +57,7 @@ interface LogoProps {
   color?: string;
 }
 export const Logo = styled.img<LogoProps>`
+  cursor: pointer;
   width: ${(props) => props.width};
   height: ${(props) => props.height};
   color: ${(props) => props.color};
@@ -70,6 +72,7 @@ const Menu = styled.div`
 `;
 //3d00eb
 const MenuItem = styled.div`
+  cursor: pointer;
   margin: 0;
   padding: 10px 20px;
   border-top: 1px solid grey;
@@ -90,7 +93,11 @@ const BUY_TOKEN = gql`
 `;
 
 export const PointMenu = () => {
-  const [buyToken, { loading }] = useMutation(BUY_TOKEN);
+  const navigate = useNavigate();
+  const onCompleted = () => {
+    navigate("/user");
+  };
+  const [buyToken, { loading }] = useMutation(BUY_TOKEN, { onCompleted });
 
   return loading ? (
     <LoadingScreen />

@@ -274,29 +274,25 @@ const Map = (props: propsType) => {
     // 검색결과 항목을 Element로 반환하는 함수
     function getListItem(index: number, places: placeType) {
       const el = document.createElement("li");
+      el.style.width = "100%";
+      el.style.borderBottom = "1px solid #d9d9d9";
+
       const itemStr = `
-          <div class="info">
-            <span class="marker marker_${index + 1}">
-              ${index + 1}
-            </span>
-            <a>
-              <h5 class="info-item place-name">${places.place_name}</h5>
-              ${
-                places.road_address_name
-                  ? `<span class="info-item road-address-name">
-                    ${places.road_address_name}
-                   </span>
-                   <span class="info-item address-name">
-                 	 ${places.address_name}
-               	   </span>`
-                  : `<span class="info-item address-name">
-             	     ${places.address_name}
-                  </span>`
-              }
-              <span class="info-item tel">
-                ${places.phone}
+          <div style = "display:flex; flex-direction: row; height:30px; width: 100%; fontSize: 30px; color:red; align-items:space-between; justify-content:center;">
+            <div id = "placeName" style = "display:flex; flex-direction:row; width:100%; height:30px; fontSize: 30px; color:black; align-items:center;  justify-content:space-between;">
+            <div style = "display:flex; align-items:center; ">
+              <img style = "width:20px; height:20px; margin-left: 10px; margin-right:10px;" src = "/search.svg"/>
+              ${places.place_name}
+            </div>  
+            
+              <span class="marker marker_${
+                index + 1
+              } style = "display:flex; height:100% width: 40px; align-items:center; color:black; padding-right: 20px;">
+                ${index + 1}
               </span>
-            </a>
+            </div>
+            
+
           </div>
           `;
 
@@ -379,8 +375,20 @@ const Map = (props: propsType) => {
     // 검색결과 목록 또는 마커를 클릭했을 때 호출되는 함수
     // 인포윈도우에 장소명을 표시
     function displayInfowindow(marker: any, title: string) {
+      // title의 길이에 따라 width를 조정하는 로직
+      let width = "auto"; // 기본값
+      if (title.length < 10) {
+        width = "100px"; // 예: title의 길이가 10 미만일 경우 100px로 설정
+      } else if (title.length < 20) {
+        width = "150px"; // 예: title의 길이가 20 미만일 경우 150px로 설정
+      } else {
+        width = "200px"; // 예: title의 길이가 그 이상일 경우 200px로 설정
+      }
+
       const content =
-        '<div style="padding:5px;z-index:6;color:red;" class="marker-title">' +
+        '<div style="padding: 5px 5px; font-size: 15px; display:flex; justify-content:center; z-index:6; color:black; width: ' +
+        width +
+        ';" class="marker-title">' +
         title +
         "</div>";
 
@@ -420,72 +428,92 @@ const Map = (props: propsType) => {
           <BackButton type="button" onClick={() => navigate(-1)}>
             <Logo src="/thick-chevron-left.svg" />
           </BackButton>
-          {startingPoint !== "" ? (
-            <InputContainer>
-              <InvisibleButton />
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <InputCircle backgroundColor="#04d9b2" />
-                <Input name="startingPoint" placeholder={startingPoint} />
-                <Text color="#d9d9d9" fontSize="10px">
-                  변경
-                </Text>
-              </div>
 
+          {startingPoint !== "" ? (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                width: "80%",
+              }}
+            >
+              <InputContainer>
+                <InvisibleButton />
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <InputCircle backgroundColor="#04d9b2" />
+                  <Input name="startingPoint" placeholder={startingPoint} />
+                  <Text color="#d9d9d9" fontSize="10px">
+                    변경
+                  </Text>
+                </div>
+              </InputContainer>
               {destinationPoint !== "" ? (
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <InputCircle backgroundColor="#04d9b2" />
-                  <Input
-                    onChange={onChange}
-                    name="value"
-                    value={value}
-                    placeholder={destinationPoint}
-                    required
-                  />
-                  <Text color="#d9d9d9" fontSize="10px">
-                    변경
-                  </Text>
-                </div>
+                <InputContainer>
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <InputCircle backgroundColor="#ec2e2e" />
+                    <Input
+                      onChange={onChange}
+                      name="value"
+                      value={value}
+                      placeholder={destinationPoint}
+                      required
+                    />
+                    <Text color="#d9d9d9" fontSize="10px">
+                      변경
+                    </Text>
+                  </div>
+                </InputContainer>
               ) : (
+                <InputContainer>
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <InputCircle backgroundColor="#ec2e2e" />
+                    <Input
+                      onChange={onChange}
+                      name="value"
+                      value={value}
+                      placeholder="도착지"
+                      required
+                    />
+                    <Text color="#d9d9d9" fontSize="10px">
+                      변경
+                    </Text>
+                  </div>
+                </InputContainer>
+              )}
+            </div>
+          ) : (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                width: "80%",
+              }}
+            >
+              <InputContainer>
                 <div style={{ display: "flex", alignItems: "center" }}>
                   <InputCircle backgroundColor="#04d9b2" />
                   <Input
                     onChange={onChange}
                     name="value"
                     value={value}
-                    placeholder="도착지"
+                    placeholder="출발지"
                     required
                   />
-                  <Text color="#d9d9d9" fontSize="10px">
-                    변경
-                  </Text>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      padding: "0px 5px",
+                      width: "40px",
+                    }}
+                  >
+                    <Text color="#d9d9d9" fontSize="10px">
+                      변경
+                    </Text>
+                  </div>
                 </div>
-              )}
-            </InputContainer>
-          ) : (
-            <InputContainer>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <InputCircle backgroundColor="#04d9b2" />
-                <Input
-                  onChange={onChange}
-                  name="value"
-                  value={value}
-                  placeholder="출발지"
-                  required
-                />
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    padding: "0px 5px",
-                    width: "40px",
-                  }}
-                >
-                  <Text color="#d9d9d9" fontSize="10px">
-                    변경
-                  </Text>
-                </div>
-              </div>
-            </InputContainer>
+              </InputContainer>
+            </div>
           )}
         </SearchContainer>
 

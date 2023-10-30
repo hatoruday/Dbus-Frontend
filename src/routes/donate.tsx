@@ -3,14 +3,22 @@ import { Button, Logo, Text } from "../components/pointMenu";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
-  AcheivementRateBar,
   Achievment,
   NotAchievment,
+  StrongText,
   TitkcTicketContainer,
 } from "../components/TitleFundingContainer";
 import { gql, useMutation } from "@apollo/client";
 import LoadingScreen from "../components/loading-screen";
 
+const AcheivementRateBar = styled.div`
+  width: 90%;
+  height: 30px;
+  border-radius: 30px;
+  background-color: #d9d9d9;
+  display: flex;
+  position: relative;
+`;
 const Menu = styled.div`
   display: flex;
   flex-direction: column;
@@ -84,7 +92,10 @@ export default function Donate({}) {
     destination: { destinationX, destinationY, destinationPoint },
     fund: { fundIdx, totalAmount, currentAmount, totalNumber, currentNumber },
   } = location.state;
-  const acheivementRate = (currentAmount / totalAmount) * 100;
+  const acheivementRate =
+    (currentAmount / totalAmount) * 100 > 100
+      ? 100
+      : (currentAmount / totalAmount) * 100;
 
   const navigate = useNavigate();
 
@@ -159,38 +170,40 @@ export default function Donate({}) {
               style={{
                 display: "flex",
                 width: "100%",
-                justifyContent: "space-between",
+                justifyContent: "center",
               }}
             >
               <AcheivementRateBar id="acheivementbar">
                 <Achievment rate={acheivementRate}>
-                  <Text color="#d9d9d9" fontSize="10px">
-                    달성률 {acheivementRate} %
-                  </Text>
+                  <div
+                    style={{
+                      position: "absolute",
+                      left: "20%",
+                      width: "100px",
+                      zIndex: "1",
+                    }}
+                  >
+                    <StrongText>달성률 {acheivementRate} %</StrongText>
+                  </div>
                 </Achievment>
                 <NotAchievment rate={acheivementRate}>
-                  <Text color="#d9d9d9" fontSize="10px">
-                    {totalAmount - currentAmount}
-                  </Text>
+                  <div
+                    style={{
+                      position: "absolute",
+                      right: "20%",
+                      width: "100px",
+                      zIndex: "1",
+                    }}
+                  >
+                    <StrongText>
+                      {totalAmount - currentAmount < 0
+                        ? 0
+                        : totalAmount - currentAmount}
+                      {" KRW"}
+                    </StrongText>
+                  </div>
                 </NotAchievment>
               </AcheivementRateBar>
-              <Button
-                color="#4764cd"
-                onClick={() => {
-                  navigate("/user/showfund", {
-                    state: {
-                      starting: { startingX, startingY, startingPoint },
-                      destination: {
-                        destinationX,
-                        destinationY,
-                        destinationPoint,
-                      },
-                    },
-                  });
-                }}
-              >
-                Fund
-              </Button>
             </div>
           </TitleFundingContainer>
         </div>
@@ -215,8 +228,9 @@ export default function Donate({}) {
               margin: "7px 0px",
             }}
           >
-            달성률 {100 - acheivementRate}% ({totalAmount - currentAmount}KRW)를
-            채우면 노선이 개설됩니다.
+            달성률 {100 - acheivementRate}% (
+            {totalAmount - currentAmount < 0 ? 0 : totalAmount - currentAmount}
+            KRW)를 채우면 노선이 개설됩니다.
           </div>
           <div
             style={{
@@ -237,13 +251,30 @@ export default function Donate({}) {
             donateFund({
               variables: {
                 fundId: fundIdx,
-                amount: 4000,
+                amount: 2000,
               },
             });
           }}
         >
           <Text color="rgba(71, 100, 205, 0.85)" fontSize="20px">
             1 티켓
+          </Text>
+          <Button color="rgba(71, 100, 205, 0.8)" fontSize="15px" width="95px">
+            2000P
+          </Button>
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            donateFund({
+              variables: {
+                fundId: fundIdx,
+                amount: 4000,
+              },
+            });
+          }}
+        >
+          <Text color="rgba(71, 100, 205, 0.85)" fontSize="20px">
+            2 티켓
           </Text>
           <Button color="rgba(71, 100, 205, 0.8)" fontSize="15px" width="95px">
             4000P
@@ -253,144 +284,136 @@ export default function Donate({}) {
           onClick={() => {
             donateFund({
               variables: {
-                amount: 1000,
+                fundId: fundIdx,
+                amount: 6000,
               },
             });
           }}
         >
           <Text color="rgba(71, 100, 205, 0.85)" fontSize="20px">
-            2000 포인트
+            3 티켓
           </Text>
           <Button color="rgba(71, 100, 205, 0.8)" fontSize="15px" width="95px">
-            2000원
+            6000P
           </Button>
         </MenuItem>
         <MenuItem
           onClick={() => {
             donateFund({
               variables: {
-                amount: 1000,
+                fundId: fundIdx,
+                amount: 10000,
               },
             });
           }}
         >
           <Text color="rgba(71, 100, 205, 0.85)" fontSize="20px">
-            3000 포인트
+            5 티켓
           </Text>
           <Button color="rgba(71, 100, 205, 0.8)" fontSize="15px" width="95px">
-            3000원
+            10000P
           </Button>
         </MenuItem>
         <MenuItem
           onClick={() => {
             donateFund({
               variables: {
-                amount: 1000,
+                fundId: fundIdx,
+                amount: 20000,
               },
             });
           }}
         >
           <Text color="rgba(71, 100, 205, 0.85)" fontSize="20px">
-            5000 포인트
+            10 티켓
           </Text>
           <Button color="rgba(71, 100, 205, 0.8)" fontSize="15px" width="95px">
-            5000원
+            20000P
           </Button>
         </MenuItem>
         <MenuItem
           onClick={() => {
             donateFund({
               variables: {
-                amount: 1000,
+                fundId: fundIdx,
+                amount: 30000,
               },
             });
           }}
         >
           <Text color="rgba(71, 100, 205, 0.85)" fontSize="20px">
-            10000 포인트
+            15 티켓
           </Text>
           <Button color="rgba(71, 100, 205, 0.8)" fontSize="15px" width="95px">
-            10000원
+            30000P
           </Button>
         </MenuItem>
         <MenuItem
           onClick={() => {
             donateFund({
               variables: {
-                amount: 1000,
+                fundId: fundIdx,
+                amount: 60000,
               },
             });
           }}
         >
           <Text color="rgba(71, 100, 205, 0.85)" fontSize="20px">
-            15000 포인트
+            20 티켓
           </Text>
           <Button color="rgba(71, 100, 205, 0.8)" fontSize="15px" width="95px">
-            15000원
+            40000P
           </Button>
         </MenuItem>
         <MenuItem
           onClick={() => {
             donateFund({
               variables: {
+                fundId: fundIdx,
                 amount: 1000,
               },
             });
           }}
         >
           <Text color="rgba(71, 100, 205, 0.85)" fontSize="20px">
-            20000 포인트
+            30 티켓
           </Text>
           <Button color="rgba(71, 100, 205, 0.8)" fontSize="15px" width="95px">
-            20000원
+            60000P
           </Button>
         </MenuItem>
         <MenuItem
           onClick={() => {
             donateFund({
               variables: {
-                amount: 1000,
+                fundId: fundIdx,
+                amount: 100000,
               },
             });
           }}
         >
           <Text color="rgba(71, 100, 205, 0.85)" fontSize="20px">
-            30000 포인트
+            50 티켓
           </Text>
           <Button color="rgba(71, 100, 205, 0.8)" fontSize="15px" width="95px">
-            30000원
+            100000P
           </Button>
         </MenuItem>
         <MenuItem
           onClick={() => {
             donateFund({
               variables: {
-                amount: 1000,
+                fundId: fundIdx,
+                amount: 200000,
               },
             });
           }}
         >
           <Text color="rgba(71, 100, 205, 0.85)" fontSize="20px">
-            50000 포인트
+            100 티켓
           </Text>
           <Button color="rgba(71, 100, 205, 0.8)" fontSize="15px" width="95px">
-            50000원
-          </Button>
-        </MenuItem>
-        <MenuItem
-          onClick={() => {
-            donateFund({
-              variables: {
-                amount: 1000,
-              },
-            });
-          }}
-        >
-          <Text color="rgba(71, 100, 205, 0.85)" fontSize="20px">
-            100000 포인트
-          </Text>
-          <Button color="rgba(71, 100, 205, 0.8)" fontSize="15px" width="95px">
-            100000원
+            200000P
           </Button>
         </MenuItem>
       </Menu>
